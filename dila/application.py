@@ -3,6 +3,10 @@ import polib
 from dila import data
 
 
+def setup():
+    data.setup()
+
+
 def upload_translated_po_file(content):
     po = polib.pofile(content)
     for entry in po:

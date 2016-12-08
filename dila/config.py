@@ -4,6 +4,7 @@ SERVER_NAME = None
 SECRET_KEY = None
 ENV = 'production'
 DEBUG = False
+DATABASE_URL = ''
 
 
 def setup_from_module(module_name):

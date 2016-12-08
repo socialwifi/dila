@@ -14,6 +14,7 @@ class Dila(cmd2.Cmd):
 def run():
     import sys
     initialize.initialize_config()
+    appplication.setup()
     if len(sys.argv) > 1:
         Dila().onecmd(' '.join(sys.argv[1:]))
     else:

@@ -3,3 +3,5 @@ cmd2
 Flask
 Flask-WTF
 polib
+psycopg2
+SQLAlchemy
