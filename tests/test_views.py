@@ -1,7 +1,3 @@
-from dila.frontend.flask import views
-
-
-def test_home(flask_app):
-    with flask_app.app_context():
-        response = views.home()
-    assert '<title>Dila</title>' in response
+def test_home(flask_client):
+    response = flask_client.get('/')
+    assert '<title>Dila</title>' in response.data.decode()
