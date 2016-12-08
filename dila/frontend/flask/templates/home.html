@@ -1,4 +1,8 @@
 {% extends "layout.html" %}
 {% block body %}
-
+<form method="POST" action="{{ url_for('main.home') }}">
+    {{ form.csrf_token }}
+    {{ form.po_file.label }} {{ form.po_file }}
+    <input type="submit" value="Upload">
+</form>
 {% endblock %}

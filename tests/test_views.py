@@ -16,6 +16,11 @@ def test_home(flask_client):
     assert '<title>Dila</title>' in response.data.decode()
 
 
+def test_upload_po_file_form_visible(flask_client):
+    response = flask_client.get('/')
+    assert '<input id="po_file" name="po_file" type="file">' in response.data.decode()
+
+
 def test_upload_po_file(flask_client):
     response = flask_client.post(
         '/',
