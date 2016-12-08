@@ -1,4 +1,4 @@
-from dila.frontend import views
+from dila.frontend.flask import views
 
 
 def test_home(flask_app):

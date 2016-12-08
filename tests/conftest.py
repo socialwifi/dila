@@ -1,6 +1,6 @@
 import pytest
 
-from dila.frontend import wsgi
+from dila.frontend.flask import wsgi
 
 
 @pytest.fixture(scope="session")

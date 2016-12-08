@@ -1,7 +1,7 @@
 import flask
 
 from dila import config
-from dila.frontend import views
+from dila.frontend.flask import views
 
 
 def create_app():
