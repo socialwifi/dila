@@ -1,0 +1,7 @@
+# My comment
+#. Programmer comment
+#: location.c:23
+#, fuzzy
+msgctxt "Disambiguation for context"
+msgid "One"
+msgstr "Een"
