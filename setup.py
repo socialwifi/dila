@@ -10,11 +10,11 @@ setup(
     author='Jakub Skiepko',
     author_email='it@socialwifi.com',
     url='https://github.com/socialwifi/dila',
-    packages=find_packages(),
+    packages=['dila'],
     install_requires=[str(ir.req) for ir in parse_requirements('base_requirements.txt', session=False)],
     entry_points={
         'console_scripts': [
-            'dila = social_translations.cli:run',
+            'dila = dila.frontend.cli:run',
         ],
     },
     license='BSD',
