@@ -1,6 +1,7 @@
 import flask
 
 from dila import config
+from dila.frontend import views
 
 
 def create_app():
@@ -9,5 +10,7 @@ def create_app():
         SERVER_NAME=config.SERVER_NAME,
         SECRET_KEY=config.SECRET_KEY,
         TESTING=config.ENV == 'test',
+        DEBUG=config.DEBUG,
     )
+    app.register_blueprint(views.blueprint)
     return app

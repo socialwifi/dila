@@ -1,12 +1,15 @@
 import cmd2
 
+from dila import config
 from dila.frontend import wsgi
+
 
 
 class Dila(cmd2.Cmd):
     """Dila Commandline."""
     def do_run_dev_server(self, arg):
         print('Running dev server')
+        config.setup(DEBUG=True)
         wsgi.create_app().run(host='0.0.0.0', port=80)
 
 

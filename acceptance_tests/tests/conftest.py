@@ -31,7 +31,7 @@ def running_server_ip(running_server):
 
 @pytest.fixture(scope="session")
 def running_server_url(running_server_ip):
-    return 'http://' + running_server_ip
+    return 'http://' + running_server_ip + '/'
 
 
 @pytest.fixture(scope="session")
