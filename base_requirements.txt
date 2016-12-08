@@ -1,3 +1,4 @@
+cached-property
+cmd2
 Flask
 Flask-WTF
-cmd2

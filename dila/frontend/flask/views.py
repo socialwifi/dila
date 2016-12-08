@@ -1,6 +1,8 @@
 import flask
+from cached_property import cached_property
 from flask import views
 
+from dila import application
 from dila.frontend.flask import forms
 
 blueprint = flask.Blueprint('main', __name__)
@@ -12,6 +14,7 @@ class HomeView(views.MethodView):
 
     def post(self):
         if self.form.validate():
+            application.upload_translated_po_file(self.form.po_file.data.read().decode())
             flask.flash('File uploaded')
             return flask.redirect(flask.url_for('main.home'))
         else:
@@ -23,7 +26,7 @@ class HomeView(views.MethodView):
             'form': self.form
         }
 
-    @property
+    @cached_property
     def form(self):
         return forms.PoFileUpload()
 

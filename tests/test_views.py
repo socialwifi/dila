@@ -1,4 +1,5 @@
 import io
+from unittest import mock
 
 test_po = '''
 # My comment
@@ -6,9 +7,9 @@ test_po = '''
 #: location.c:23
 #, fuzzy
 msgctxt "Disambiguation for context"
-msgid "One"
-msgstr "Een"
-'''.encode()
+msgid "Yellow"
+msgstr "Żółć"
+'''
 
 
 def test_home(flask_client):
@@ -21,13 +22,15 @@ def test_upload_po_file_form_visible(flask_client):
     assert '<input id="po_file" name="po_file" type="file">' in response.data.decode()
 
 
-def test_upload_po_file(flask_client):
+@mock.patch('dila.application.upload_translated_po_file')
+def test_upload_po_file(upload_translated_po_file, flask_client):
     response = flask_client.post(
         '/',
         data={
-            'po_file': (io.BytesIO(test_po), 'test.po'),
+            'po_file': (io.BytesIO(test_po.encode()), 'test.po'),
         }
     )
     assert response.status_code == 302
     response = flask_client.get(response.location)
     assert 'File uploaded' in response.data.decode()
+    upload_translated_po_file.assert_called_with(test_po)
