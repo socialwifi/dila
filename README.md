@@ -1,5 +1,6 @@
 # dila
 
+[![Build Status](https://travis-ci.org/socialwifi/dila.svg?branch=master)](https://travis-ci.org/socialwifi/dila)
 [![Latest Version](https://img.shields.io/pypi/v/dila.svg)](https://github.com/socialwifi/dila/blob/master/CHANGELOG.md)
 [![Supported Python versions](https://img.shields.io/pypi/pyversions/dila.svg)](https://pypi.python.org/pypi/dila/)
 [![Wheel Status](https://img.shields.io/pypi/wheel/dila.svg)](https://pypi.python.org/pypi/dila/)
