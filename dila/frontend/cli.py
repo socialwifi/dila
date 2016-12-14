@@ -1,5 +1,6 @@
 import cmd2
 
+from dila import application
 from dila.frontend import flask
 from dila.frontend import initialize
 
@@ -14,7 +15,7 @@ class Dila(cmd2.Cmd):
 def run():
     import sys
     initialize.initialize_config()
-    appplication.setup()
+    application.setup()
     if len(sys.argv) > 1:
         Dila().onecmd(' '.join(sys.argv[1:]))
     else:
