@@ -14,7 +14,7 @@ class HomeView(views.MethodView):
 
     def post(self):
         if self.form.validate():
-            application.upload_translated_po_file(self.form.po_file.data.read().decode())
+            application.upload_translated_po_file(flask.request.files[self.form.po_file.name].read().decode())
             flask.flash('File uploaded')
             return flask.redirect(flask.url_for('main.home'))
         else:
