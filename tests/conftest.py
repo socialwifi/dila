@@ -27,7 +27,7 @@ def flask_client(flask_app):
         yield client
 
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def initialized_db_autocommit_connection(postgres_server_ip):
     from dila.data import engine
     connection = engine.database.connect_with_connection('postgresql://postgres:postgres@{}/postgres'.format(postgres_server_ip))
