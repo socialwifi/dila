@@ -1,9 +1,11 @@
 import pathlib
+import uuid
 
 import pytest
 import sh
 import time
 from selenium import webdriver
+from selenium.common import exceptions as selenium_exceptions
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
 
@@ -67,3 +69,22 @@ def selenium(selenium_server_ip):
 def get_container_ip(container_name):
     return sh.docker(
         'inspect', '-f', '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}', container_name).strip()
+
+@pytest.mark.hookwrapper
+def pytest_runtest_makereport(item, call):
+    outcome = yield
+    report = outcome.get_result()
+    selenium = item.funcargs.get('selenium', None)
+    if selenium and report.when == 'call':
+        report.sections.append(('selenium', '\n'.join(get_selenium_summary(selenium))))
+
+
+def get_selenium_summary(selenium: webdriver.Remote):
+    try:
+        yield 'current_url: {}'.format(selenium.current_url)
+        screenshot = '/tmp/{}.png'.format(uuid.uuid4())
+        with open(screenshot, 'wb') as f:
+            f.write(selenium.get_screenshot_as_png())
+        yield 'screenshot: {}'.format(screenshot)
+    except selenium_exceptions.WebDriverException:
+        yield 'FAILED TO GET SELENIUM DATA.'
