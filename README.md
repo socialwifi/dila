@@ -13,5 +13,45 @@ Requires python >=3.5. To install run:
 `pip3 install dila`
 
 ## Usage
-To check development server:
-`dila run_dev_server`
+To run development server you have to setup postgresql database first. Then run:
+```
+cat >config.py <<_EOL
+SECRET_KEY = 'secret'
+DEBUG = True
+DATABASE_URL = 'postgresql://username:password@localhost/dila_database'
+_EOL
+export DILA_CONFIG_MODULE=config.py
+dila run_dev_server
+```
+
+## Development and testing
+Tests requires docker. Development server even if can be run without it also is easier to run with docker.
+You can install it from [here](https://docs.docker.com/engine/getstarted/linux_install_help/).
+### Development
+To run tests run development server run
+```
+source activate-env
+dila_install_requirements
+dila_dev_server_start
+```
+To stop run `dila_dev_server_stop`
+
+To run tests you should create virtualenv and install requirements. Then run `pytest`
+```
+virtualenv -p python3 $HOME/dila-virtualenv
+. $HOME/dila-virtualenv/bin/activate
+pip install -r base_requirements.txt
+pip install -r test_requirements.txt
+pytest
+```
+Pytest is configured to setup dependencies in docker, so you still must have docker.
+
+To run acceptance tests you can use separate virtualenv:
+
+```
+virtualenv -p python3 $HOME/dila-acceptance-virtualenv
+. $HOME/dila-acceptance-virtualenv/bin/activate
+pip install -r acceptance_test/test_requirements.txt
+pytest acceptance_test
+```
+In the future we shoud run pytest in docker as well.
