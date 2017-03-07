@@ -9,7 +9,7 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
 @pytest.fixture(scope="session")
 def docker_image():
-    build_script = pathlib.Path(__file__).parent.parent / 'test_image' / 'build.sh'
+    build_script = pathlib.Path(__file__).parent.parent.parent / 'test_image' / 'build.sh'
     build = sh.Command(str(build_script))
     image_name = 'test_dila_image'
     build(image_name)
