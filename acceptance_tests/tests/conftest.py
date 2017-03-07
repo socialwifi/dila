@@ -43,7 +43,7 @@ def running_server_url(running_server_ip):
 def selenium_server():
     container_name = 'test_dila_selenium'
     sh.docker('run', '-d', '--name', container_name, 'selenium/standalone-firefox')
-    log = sh.docker('logs', '-f', container_name, _iter=True)
+    log = sh.docker('logs', '-f', container_name, _iter=True, _ok_code=2)
     for line in log:
         if 'Selenium Server is up and running' in line:
             break
