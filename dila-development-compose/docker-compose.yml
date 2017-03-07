@@ -1,0 +1,8 @@
+dila:
+  image: dila_dev_image
+  links:
+   - db
+  ports:
+   - "8089:80"
+db:
+  image: postgres:9.6.2

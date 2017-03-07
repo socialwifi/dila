@@ -1,0 +1,5 @@
+#!/bin/bash -e
+cd "$(dirname $0)/.."
+../test_image/build.sh dila_dev_image
+docker-compose build
+docker-compose up -d $UP_FLAGS
