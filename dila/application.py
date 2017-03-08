@@ -22,3 +22,6 @@ def upload_translated_po_file(content):
                 comment=entry.comment,
                 translator_comment=entry.tcomment,
             )
+
+def get_translated_strings():
+    return data.get_translated_strings()

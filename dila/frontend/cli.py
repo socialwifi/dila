@@ -14,6 +14,7 @@ class Dila(cmd2.Cmd):
 
 def run():
     import sys
+    register_termination_signals()
     initialize.initialize_config()
     application.setup()
     if len(sys.argv) > 1:

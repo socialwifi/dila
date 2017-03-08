@@ -24,3 +24,11 @@ def test_upload_translated_po_file_with(add_translated_string):
             comment='Programmer comment',
             translator_comment='',
         )]
+
+
+@mock.patch('dila.data.get_translated_strings')
+def test_get_translated_strings(get_translated_strings):
+    get_translated_strings.return_value = 'data_result'
+    result = application.get_translated_strings()
+    get_translated_strings.assert_called_with()
+    assert result == 'data_result'
