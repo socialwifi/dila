@@ -1,5 +1,6 @@
 import flask
 
+from dila import application
 from dila import config
 from dila.frontend.flask import views
 
@@ -13,4 +14,8 @@ def create_app():
         DEBUG=config.DEBUG,
     )
     app.register_blueprint(views.blueprint)
+
+    @app.teardown_appcontext
+    def shutdown_session(exception=None):
+        application.shutdown_session(exception=exception)
     return app

@@ -10,5 +10,10 @@ session = sqlalchemy.orm.scoped_session(database.Session)
 Base = sqlalchemy.ext.declarative.declarative_base()
 Base.query = session.query_property()
 
+
 def setup():
     database.connect(config.DATABASE_URL)
+
+
+def shutdown_session(exception=None):
+    session.remove()
