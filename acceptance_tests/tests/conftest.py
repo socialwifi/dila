@@ -18,7 +18,7 @@ def docker_image():
     yield image_name
 
 @pytest.fixture(scope="session")
-def postgres_server():
+def unmigrated_postgres_server():
     container_name = 'acceptance_test_dila_postgres'
     sh.docker('run', '-d', '--name', container_name, 'postgres')
     log = sh.docker('logs', '-f', container_name, _iter=True, _ok_code=2)
@@ -28,6 +28,14 @@ def postgres_server():
     log.terminate()
     yield container_name
     sh.docker('rm', '-fv', container_name)
+
+
+@pytest.fixture(scope="session")
+def postgres_server(unmigrated_postgres_server, docker_image):
+    sh.docker('run', '--rm', '--link', '{}:db'.format(unmigrated_postgres_server), docker_image,
+              'alembic', '-c', 'dila/alembic.ini', 'upgrade', 'head')
+    yield unmigrated_postgres_server
+
 
 @pytest.fixture(scope="session")
 def running_server(postgres_server, docker_image):
