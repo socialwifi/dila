@@ -1,5 +1,6 @@
 import pytest
 import sh
+import time
 
 from dila import config
 from dila import data
@@ -62,10 +63,11 @@ def db_session(db_connection):
 def postgres_server():
     container_name = 'test_dila_postgres'
     sh.docker('run', '-d', '--name', container_name, 'postgres')
-    log = sh.docker('logs', '-f', container_name, _iter=True)
+    log = sh.docker('logs', '-f', container_name, _iter=True, _ok_code=2)
     for line in log:
         if 'PostgreSQL init process complete; ready for start up.' in line:
             break
+    time.sleep(1)
     log.terminate()
     yield container_name
     sh.docker('rm', '-fv', container_name)
