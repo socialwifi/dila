@@ -42,3 +42,10 @@ def get_translated_strings():
 
 def get_translated_string(pk):
     return TranslatedString.query.get(pk).as_data()
+
+
+def set_translated_string(pk, **kwargs):
+    update = {
+        getattr(TranslatedString, key): value for key, value in kwargs.items()
+    }
+    TranslatedString.query.filter(TranslatedString.id == pk).update(update)

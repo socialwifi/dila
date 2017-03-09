@@ -22,3 +22,7 @@ def get_translated_strings():
 
 def get_translated_string(pk):
     return data.get_translated_string(pk)
+
+
+def set_translated_string(pk, **kwargs):
+    data.set_translated_string(pk, **kwargs)

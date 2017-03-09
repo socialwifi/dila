@@ -46,6 +46,14 @@ class TranslatedStringEditor(views.MethodView):
     def get(self):
         return flask.render_template('translated_string.html', **self.context)
 
+    def post(self):
+        if self.form.validate():
+            application.set_translated_string(self.pk, translation=self.form.data['translation'])
+            flask.flash('Translation changed')
+            return flask.redirect(flask.url_for('main.home'))
+        else:
+            return self.get()
+
     @property
     def context(self):
         return {

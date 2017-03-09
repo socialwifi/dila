@@ -19,7 +19,8 @@ def test_first(selenium: selenium.webdriver.Remote, running_server_url):
     text_input.clear()
     text_input.send_keys('New translation')
     selenium.find_element_by_css_selector('input[type="submit"]').click()
+    selenium.implicitly_wait(2)
     content = selenium.find_element_by_tag_name('body').text
-    assert 'File uploaded' in content
+    assert 'Translation changed' in content
     assert 'Disambiguation for context' in content
     assert 'New translation' in content

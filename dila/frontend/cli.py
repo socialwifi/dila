@@ -1,9 +1,21 @@
+import signal
+
 import cmd2
+import sys
 
 from dila import application
 from dila.frontend import flask
 from dila.frontend import initialize
 
+TERMINATION_SIGNALS = [signal.SIGTERM, signal.SIGQUIT, signal.SIGINT]
+
+
+def register_termination_signals():
+    def terminate(signum, frame):
+        sys.exit(0)
+
+    for signum in TERMINATION_SIGNALS:
+        signal.signal(signum, terminate)
 
 class Dila(cmd2.Cmd):
     """Dila Commandline."""

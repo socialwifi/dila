@@ -59,7 +59,7 @@ def test_links_to_stored_translation_page(get_translated_strings, flask_client):
     assert re.search('<a href="/34/">\s+base_string\s+</a>', response.data.decode())
 
 @mock.patch('dila.application.get_translated_string')
-def test_links_to_stored_translation_page(get_translated_string, flask_client):
+def test_get_translation_form(get_translated_string, flask_client):
     get_translated_string.return_value = structures.TranslatedStringData(
         '34',
         'base_string',
@@ -71,3 +71,22 @@ def test_links_to_stored_translation_page(get_translated_string, flask_client):
     response = flask_client.get('/34/')
     assert re.search('<input id="translation" name="translation" type="text" value="translation-x">',
                      response.data.decode())
+
+
+@mock.patch('dila.application.get_translated_strings', mock.MagicMock())
+@mock.patch('dila.application.get_translated_string')
+@mock.patch('dila.application.set_translated_string')
+def test_post_translation_form(set_translated_string, get_translated_string, flask_client):
+    get_translated_string.return_value = structures.TranslatedStringData(
+        '34',
+        'base_string',
+        'translation-x',
+        'comment',
+        'translator_comment',
+        'context',
+    )
+    response = flask_client.post('/34/', data={'translation': 'new-translation'})
+    assert response.status_code == 302
+    response = flask_client.get(response.location)
+    assert 'Translation changed' in response.data.decode()
+    set_translated_string.assert_called_with('34', translation='new-translation')
