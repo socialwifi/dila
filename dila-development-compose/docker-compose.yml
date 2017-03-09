@@ -4,5 +4,7 @@ dila:
    - db
   ports:
    - "8089:80"
+  volumes:
+   - ../dila:/package/dila
 db:
   image: postgres:9.6.2
