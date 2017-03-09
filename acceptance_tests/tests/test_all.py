@@ -3,10 +3,11 @@ import urllib.request
 
 import selenium.webdriver
 
-PO_RESULT = '''# My comment
+PO_RESULT = '''#
+msgid ""
+msgstr ""
+
 #. Programmer comment
-#: location.c:23
-#, fuzzy
 msgctxt "Disambiguation for context"
 msgid "One"
 msgstr "New translation"
@@ -39,5 +40,5 @@ def test_first(selenium: selenium.webdriver.Remote, running_server_url):
     po_url = download_link.get_attribute('href')
     with urllib.request.urlopen(po_url) as new_po_file:
         new_po = new_po_file.read()
-        assert new_po == PO_RESULT
-        new_po_file.info().headers['Content-Disposition'] = "attachment; filename=translation.po"
+        assert new_po.decode('utf-8') == PO_RESULT
+        assert new_po_file.info()['Content-Disposition'] == "attachment; filename=translations.po"

@@ -1,5 +1,7 @@
 from unittest import mock
 
+from dila.application import structures
+
 from dila import application
 
 test_po = '''
@@ -7,6 +9,17 @@ test_po = '''
 #. Programmer comment
 #: location.c:23
 #, fuzzy
+msgctxt "Disambiguation for context"
+msgid "Yellow"
+msgstr "Żółć"
+'''
+
+test_result_po = '''#
+msgid ""
+msgstr ""
+
+#. Programmer comment
+# My comment
 msgctxt "Disambiguation for context"
 msgid "Yellow"
 msgstr "Żółć"
@@ -46,3 +59,19 @@ def test_get_translated_strings(get_translated_string):
 def test_set_translated_strings(set_translated_string):
     application.set_translated_string(32, translation='x')
     set_translated_string.assert_called_with(32, translation='x')
+
+
+@mock.patch('dila.data.get_translated_strings')
+def test_get_po_file(get_translated_strings):
+    get_translated_strings.return_value = [
+        structures.TranslatedStringData(
+            '34',
+            'Yellow',
+            'Żółć',
+            'Programmer comment',
+            'My comment',
+            'Disambiguation for context',
+        )
+    ]
+    result = application.get_po_file()
+    assert result == test_result_po
