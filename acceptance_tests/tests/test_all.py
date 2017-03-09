@@ -16,6 +16,10 @@ msgstr "New translation"
 
 def test_first(selenium: selenium.webdriver.Remote, running_server_url):
     open_homepage(running_server_url, selenium)
+    assert_no_resources_info(selenium)
+    add_resource(selenium, 'first resource')
+    add_resource(selenium, 'second resource')
+    select_resource(selenium, 'first resource')
     upload_po(selenium)
     selenium.implicitly_wait(2)
     assert_translations_displayed(selenium)
@@ -24,11 +28,34 @@ def test_first(selenium: selenium.webdriver.Remote, running_server_url):
     selenium.implicitly_wait(2)
     assert_new_translation_displayed(selenium)
     assert_download_link_works(selenium)
+    go_homepage(selenium)
+    select_resource(selenium, 'first resource')
+    assert_no_translations_displayed(selenium)
 
 
 def open_homepage(running_server_url, selenium):
     selenium.get(running_server_url)
     assert selenium.title == 'Dila'
+
+
+def assert_no_resources_info(selenium):
+    content = selenium.find_element_by_tag_name('body').text
+    assert 'There are no resources.' in content
+
+
+def add_resource(selenium, name):
+    resource_name = selenium.find_element_by_id('new-resource-name')
+    resource_name.clear()
+    resource_name.send_keys(name)
+    selenium.find_element_by_id('add-new-resource').click()
+
+
+def select_resource(selenium, name):
+    selenium.find_element_by_link_text(name).click()
+
+
+def go_homepage(selenium):
+    selenium.find_element_by_link_text('homepage').click()
 
 
 def upload_po(selenium):
@@ -70,3 +97,10 @@ def assert_download_link_works(selenium):
         new_po = new_po_file.read()
         assert new_po.decode('utf-8') == PO_RESULT
         assert new_po_file.info()['Content-Disposition'] == "attachment; filename=translations.po"
+
+
+def assert_no_translations_displayed(selenium):
+    content = selenium.find_element_by_tag_name('body').text
+    assert 'File uploaded' not in content
+    assert 'Disambiguation for context' not in content
+    assert 'New translation' not in content
