@@ -15,16 +15,20 @@ msgstr "Żółć"
 '''
 
 
+@mock.patch('dila.application.get_translated_strings', mock.MagicMock())
 def test_home(flask_client):
     response = flask_client.get('/')
     assert '<title>Dila</title>' in response.data.decode()
 
 
+@mock.patch('dila.application.get_translated_strings', mock.MagicMock())
+@mock.patch('dila.application.upload_translated_po_file', mock.MagicMock())
 def test_upload_po_file_form_visible(flask_client):
     response = flask_client.get('/')
     assert '<input id="po_file" name="po_file" type="file">' in response.data.decode()
 
 
+@mock.patch('dila.application.get_translated_strings', mock.MagicMock())
 @mock.patch('dila.application.upload_translated_po_file')
 def test_upload_po_file(upload_translated_po_file, flask_client):
     response = flask_client.post(

@@ -5,6 +5,19 @@ from dila import config
 from dila.frontend.flask import views
 
 
+def main():
+    app = create_app()
+
+    prepare_application(app)
+    return app
+
+
+def prepare_application(app):
+    @app.teardown_appcontext
+    def shutdown_session(exception=None):
+        application.shutdown_session(exception=exception)
+
+
 def create_app():
     app = flask.Flask(__name__)
     app.config.from_mapping(
@@ -14,8 +27,4 @@ def create_app():
         DEBUG=config.DEBUG,
     )
     app.register_blueprint(views.blueprint)
-
-    @app.teardown_appcontext
-    def shutdown_session(exception=None):
-        application.shutdown_session(exception=exception)
     return app
