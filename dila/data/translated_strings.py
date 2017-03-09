@@ -1,14 +1,8 @@
-import collections
-
 import sqlalchemy
 import sqlalchemy.dialects.postgresql as postgres_dialect
 
+from dila.application import structures
 from dila.data import engine
-
-TranslatedStringData = collections.namedtuple(
-    'TranslatedString',
-    ['base_string', 'translation', 'comment', 'translator_comment', 'context']
-)
 
 
 class TranslatedString(engine.Base):
@@ -23,7 +17,7 @@ class TranslatedString(engine.Base):
     context = sqlalchemy.Column(sqlalchemy.Text)
 
     def as_data(self):
-        return TranslatedStringData(
+        return structures.TranslatedStringData(
             self.base_string,
             self.translation,
             self.comment,
