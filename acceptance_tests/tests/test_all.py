@@ -32,10 +32,10 @@ def open_homepage(running_server_url, selenium):
 
 
 def upload_po(selenium):
-    file_upload = selenium.find_element_by_css_selector('input[type="file"]')
+    file_upload = selenium.find_element_by_id('po_file')
     file_upload.clear()
     file_upload.send_keys(str(pathlib.Path(__file__).parent.parent / 'test.po'))
-    selenium.find_element_by_css_selector('input[type="submit"]').click()
+    selenium.find_element_by_id('upload_po_file').click()
 
 
 def assert_translations_displayed(selenium):
@@ -50,10 +50,10 @@ def go_to_translation_editor(selenium):
 
 
 def edit_translation(selenium):
-    text_input = selenium.find_element_by_css_selector('input[type="text"]')
+    text_input = selenium.find_element_by_id('translation')
     text_input.clear()
     text_input.send_keys('New translation')
-    selenium.find_element_by_css_selector('input[type="submit"]').click()
+    selenium.find_element_by_id('submit').click()
 
 
 def assert_new_translation_displayed(selenium):
