@@ -1,5 +1,16 @@
 import pathlib
+import urllib.request
+
 import selenium.webdriver
+
+PO_RESULT = '''# My comment
+#. Programmer comment
+#: location.c:23
+#, fuzzy
+msgctxt "Disambiguation for context"
+msgid "One"
+msgstr "New translation"
+'''
 
 
 def test_first(selenium: selenium.webdriver.Remote, running_server_url):
@@ -24,3 +35,9 @@ def test_first(selenium: selenium.webdriver.Remote, running_server_url):
     assert 'Translation changed' in content
     assert 'Disambiguation for context' in content
     assert 'New translation' in content
+    download_link = selenium.find_element_by_link_text('Download po')
+    po_url = download_link.get_attribute('href')
+    with urllib.request.urlopen(po_url) as new_po_file:
+        new_po = new_po_file.read()
+        assert new_po == PO_RESULT
+        new_po_file.info().headers['Content-Disposition'] = "attachment; filename=translation.po"
