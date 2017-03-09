@@ -10,11 +10,11 @@ class TranslatedString(engine.Base):
     id = sqlalchemy.Column(postgres_dialect.UUID(as_uuid=True),
                            server_default=sqlalchemy.text("uuid_generate_v4()"), primary_key=True,
                            nullable=False)
-    base_string = sqlalchemy.Column(sqlalchemy.Text)
-    translation = sqlalchemy.Column(sqlalchemy.Text)
-    comment = sqlalchemy.Column(sqlalchemy.Text)
-    translator_comment = sqlalchemy.Column(sqlalchemy.Text)
-    context = sqlalchemy.Column(sqlalchemy.Text)
+    base_string = sqlalchemy.Column(sqlalchemy.Text, nullable=False)
+    translation = sqlalchemy.Column(sqlalchemy.Text, nullable=False, default='')
+    comment = sqlalchemy.Column(sqlalchemy.Text, nullable=False, default='')
+    translator_comment = sqlalchemy.Column(sqlalchemy.Text, nullable=False, default='')
+    context = sqlalchemy.Column(sqlalchemy.Text, nullable=False, default='')
 
     def as_data(self):
         return structures.TranslatedStringData(
