@@ -9,7 +9,11 @@
     <table>
         {% for translated_string in translated_strings %}
             <tr>
-                <td>{{ translated_string.base_string }}</td>
+                <td>
+                    <a href="{{ url_for('main.translated_string', pk=translated_string.pk) }}">
+                        {{ translated_string.base_string }}
+                    </a>
+                </td>
                 <td>{{ translated_string.translation }}</td>
                 <td>{{ translated_string.comment }}</td>
                 <td>{{ translated_string.translator_comment }}</td>

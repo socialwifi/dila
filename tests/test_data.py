@@ -1,3 +1,5 @@
+from unittest import mock
+
 import dila.application.structures
 import dila.application.translations
 from dila import data
@@ -8,6 +10,7 @@ def test_data_preserves_translated_strings(db_connection):
     preserved_strings = list(data.get_translated_strings())
     assert preserved_strings == [
         dila.application.structures.TranslatedStringData(
+            pk=mock.ANY,
             base_string='x',
             context='ctx',
             translation='y',
@@ -20,6 +23,7 @@ def test_data_defaults_to_empty_translated_strings(db_connection):
     preserved_strings = list(data.get_translated_strings())
     assert preserved_strings == [
         dila.application.structures.TranslatedStringData(
+            pk=mock.ANY,
             base_string='x',
             context='',
             translation='',

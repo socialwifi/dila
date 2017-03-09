@@ -18,6 +18,7 @@ class TranslatedString(engine.Base):
 
     def as_data(self):
         return structures.TranslatedStringData(
+            self.id,
             self.base_string,
             self.translation,
             self.comment,

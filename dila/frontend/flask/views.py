@@ -36,3 +36,10 @@ class HomeView(views.MethodView):
         return application.get_translated_strings()
 
 blueprint.add_url_rule('/', view_func=HomeView.as_view('home'))
+
+
+class TranslatedStringEditor(views.MethodView):
+    def get(self, pk):
+        return flask.render_template('layout.html')
+
+blueprint.add_url_rule('/<pk>/', view_func=TranslatedStringEditor.as_view('translated_string'))

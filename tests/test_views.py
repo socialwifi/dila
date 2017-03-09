@@ -1,4 +1,5 @@
 import io
+import re
 from unittest import mock
 
 from dila.application import structures
@@ -39,9 +40,10 @@ def test_upload_po_file(upload_translated_po_file, flask_client):
 
 
 @mock.patch('dila.application.get_translated_strings')
-def test_display_stored_translations(get_translated_strings, flask_client):
+def test_links_to_stored_translation_page(get_translated_strings, flask_client):
     get_translated_strings.return_value = [
         structures.TranslatedStringData(
+            '34',
             'base_string',
             'translation',
             'comment',
@@ -50,4 +52,4 @@ def test_display_stored_translations(get_translated_strings, flask_client):
         )
     ]
     response = flask_client.get('/')
-    assert 'base_string' in response.data.decode()
+    assert re.search('<a href="/34/">\s+base_string\s+</a>', response.data.decode())
