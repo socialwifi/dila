@@ -1,6 +1,8 @@
 import io
 from unittest import mock
 
+from dila.application import structures
+
 test_po = '''
 # My comment
 #. Programmer comment
@@ -34,3 +36,18 @@ def test_upload_po_file(upload_translated_po_file, flask_client):
     response = flask_client.get(response.location)
     assert 'File uploaded' in response.data.decode()
     upload_translated_po_file.assert_called_with(test_po)
+
+
+@mock.patch('dila.application.get_translated_strings')
+def test_display_stored_translations(get_translated_strings, flask_client):
+    get_translated_strings.return_value = [
+        structures.TranslatedStringData(
+            'base_string',
+            'translation',
+            'comment',
+            'translator_comment',
+            'context',
+        )
+    ]
+    response = flask_client.get('/')
+    assert 'base_string' in response.data.decode()

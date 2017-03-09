@@ -23,11 +23,16 @@ class HomeView(views.MethodView):
     @property
     def context(self):
         return {
+            'translated_strings': self.translated_strings,
             'form': self.form
         }
 
     @cached_property
     def form(self):
         return forms.PoFileUpload()
+
+    @cached_property
+    def translated_strings(self):
+        return application.get_translated_strings()
 
 blueprint.add_url_rule('/', view_func=HomeView.as_view('home'))

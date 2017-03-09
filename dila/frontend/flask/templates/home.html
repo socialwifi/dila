@@ -5,4 +5,17 @@
     {{ form.po_file.label }} {{ form.po_file }}
     <input type="submit" value="Upload">
 </form>
+{% if translated_strings %}
+    <table>
+        {% for translated_string in translated_strings %}
+            <tr>
+                <td>{{ translated_string.base_string }}</td>
+                <td>{{ translated_string.translation }}</td>
+                <td>{{ translated_string.comment }}</td>
+                <td>{{ translated_string.translator_comment }}</td>
+                <td>{{ translated_string.context }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endif %}
 {% endblock %}
