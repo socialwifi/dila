@@ -70,4 +70,4 @@ class TranslatedStringEditor(views.MethodView):
         return application.get_translated_string(self.pk)
 
 
-blueprint.add_url_rule('/<pk>/', view_func=TranslatedStringEditor.as_view('translated_string'))
+blueprint.add_url_rule('/edit/<pk>/', view_func=TranslatedStringEditor.as_view('translated_string'))
