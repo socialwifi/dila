@@ -3,6 +3,10 @@ import polib
 from dila import data
 
 
+def get_po_file():
+    return 'asdf'
+
+
 def upload_translated_po_file(content):
     po = polib.pofile(content)
     for entry in po:

@@ -71,3 +71,13 @@ class TranslatedStringEditor(views.MethodView):
 
 
 blueprint.add_url_rule('/edit/<pk>/', view_func=TranslatedStringEditor.as_view('translated_string'))
+
+
+class PoFileDownload(views.MethodView):
+    def get(self):
+        response = flask.make_response(application.get_po_file())
+        response.headers["Content-Disposition"] = "attachment; filename=translations.po"
+        return response
+
+
+blueprint.add_url_rule('/po-file/', view_func=PoFileDownload.as_view('po_file_download'))

@@ -27,6 +27,12 @@ def test_upload_po_file_form_visible(flask_client):
     response = flask_client.get('/')
     assert '<input id="po_file" name="po_file" type="file">' in response.data.decode()
 
+@mock.patch('dila.application.get_translated_strings', mock.MagicMock())
+@mock.patch('dila.application.upload_translated_po_file', mock.MagicMock())
+def test_download_po_file_visible(flask_client):
+    response = flask_client.get('/')
+    assert re.search('<a href="/po-file/">\s*Download po\s*</a>', response.data.decode())
+
 
 @mock.patch('dila.application.get_translated_strings', mock.MagicMock())
 @mock.patch('dila.application.upload_translated_po_file')
@@ -90,3 +96,11 @@ def test_post_translation_form(set_translated_string, get_translated_string, fla
     response = flask_client.get(response.location)
     assert 'Translation changed' in response.data.decode()
     set_translated_string.assert_called_with('34', translation='new-translation')
+
+
+@mock.patch('dila.application.get_po_file')
+def test_get_po_file_view(get_po_file, flask_client):
+    get_po_file.return_value = 'asdf'
+    response = flask_client.get('/po-file/')
+    assert 'asdf' == response.data.decode()
+    assert "attachment; filename=translations.po" == response.headers["Content-Disposition"]
