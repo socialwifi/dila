@@ -38,3 +38,7 @@ def add_translated_string(base_string, *, translation, comment, translator_comme
 def get_translated_strings():
     for translated_string in TranslatedString.query.all():
         yield translated_string.as_data()
+
+
+def get_translated_string(pk):
+    return TranslatedString.query.get(pk).as_data()

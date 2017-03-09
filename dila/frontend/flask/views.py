@@ -39,7 +39,27 @@ blueprint.add_url_rule('/', view_func=HomeView.as_view('home'))
 
 
 class TranslatedStringEditor(views.MethodView):
-    def get(self, pk):
-        return flask.render_template('layout.html')
+    def dispatch_request(self, *args, pk):
+        self.pk = pk
+        return super().dispatch_request(*args)
+
+    def get(self):
+        return flask.render_template('translated_string.html', **self.context)
+
+    @property
+    def context(self):
+        return {
+            'form': self.form,
+            'translated_string': self.translated_string,
+        }
+
+    @cached_property
+    def form(self):
+        return forms.TranslationForm(obj=self.translated_string)
+
+    @cached_property
+    def translated_string(self):
+        return application.get_translated_string(self.pk)
+
 
 blueprint.add_url_rule('/<pk>/', view_func=TranslatedStringEditor.as_view('translated_string'))

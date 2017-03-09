@@ -32,3 +32,11 @@ def test_get_translated_strings(get_translated_strings):
     result = application.get_translated_strings()
     get_translated_strings.assert_called_with()
     assert result == 'data_result'
+
+
+@mock.patch('dila.data.get_translated_string')
+def test_get_translated_strings(get_translated_string):
+    get_translated_string.return_value = 'data_result'
+    result = application.get_translated_string(32)
+    get_translated_string.assert_called_with(32)
+    assert result == 'data_result'

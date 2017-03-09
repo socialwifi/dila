@@ -18,3 +18,7 @@ def upload_translated_po_file(content):
 
 def get_translated_strings():
     return data.get_translated_strings()
+
+
+def get_translated_string(pk):
+    return data.get_translated_string(pk)
