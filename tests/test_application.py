@@ -36,6 +36,22 @@ def test_add_resource(add_resource):
         )]
 
 
+@mock.patch('dila.data.get_resources')
+def test_get_resources(get_resources):
+    get_resources.return_value = 'data_result'
+    result = application.get_resources()
+    get_resources.assert_called_with()
+    assert result == 'data_result'
+
+
+@mock.patch('dila.data.get_resource')
+def test_get_translated_string(get_resource):
+    get_resource.return_value = 'data_result'
+    result = application.get_resource('32')
+    get_resource.assert_called_with('32')
+    assert result == 'data_result'
+
+
 @mock.patch('dila.data.add_translated_string')
 def test_upload_translated_po_file_with(add_translated_string):
     application.upload_translated_po_file('1', test_po)
@@ -60,7 +76,7 @@ def test_get_translated_strings(get_translated_strings):
 
 
 @mock.patch('dila.data.get_translated_string')
-def test_get_translated_strings(get_translated_string):
+def test_get_translated_string(get_translated_string):
     get_translated_string.return_value = 'data_result'
     result = application.get_translated_string('1', '32')
     get_translated_string.assert_called_with('32')
