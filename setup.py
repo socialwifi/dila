@@ -10,13 +10,15 @@ setup(
     author='Jakub Skiepko',
     author_email='it@socialwifi.com',
     url='https://github.com/socialwifi/dila',
-    packages=['dila'],
+    packages=find_packages(exclude=['tests']),
     install_requires=[str(ir.req) for ir in parse_requirements('base_requirements.txt', session=False)],
     entry_points={
         'console_scripts': [
             'dila = dila.frontend.cli:run',
         ],
     },
+    setup_requires=['pytest-runner'],
+    tests_require=['pytest'],
     license='BSD',
     classifiers=[
         'Development Status :: 5 - Production/Stable',
