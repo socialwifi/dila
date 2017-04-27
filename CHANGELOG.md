@@ -4,7 +4,7 @@ Changelog for dila
 0.0.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Wsgi_app is accesible from package root.
 
 
 0.0.0 (2017-04-27)
