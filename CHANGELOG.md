@@ -1,6 +1,12 @@
 Changelog for dila
 =================
 
+0.0.4 (unreleased)
+------------------
+
+- Nothing changed yet.
+
+
 0.0.3 (2017-04-27)
 ------------------
 
