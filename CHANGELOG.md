@@ -4,7 +4,7 @@ Changelog for dila
 0.0.6 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Fix including templates.
 
 
 0.0.5 (2017-04-27)

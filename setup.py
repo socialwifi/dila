@@ -30,7 +30,5 @@ setup(
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.6',
     ],
-    package_dir={'sw_cli': 'sw_cli'},
-    package_data={'sw_cli': ['alembic.ini']},
     include_package_data=True,
 )
