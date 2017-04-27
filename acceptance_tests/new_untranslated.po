@@ -6,9 +6,8 @@ msgctxt "Disambiguation for context"
 msgid "One"
 msgstr "Een"
 
-# My second comment
-#. Programmer second comment
+#. Programmer third comment
 #: location.c:25
-msgctxt "Disambiguation for second context"
-msgid "Two"
-msgstr "Twee"
+msgctxt "Disambiguation for third context"
+msgid "Three"
+msgstr ""

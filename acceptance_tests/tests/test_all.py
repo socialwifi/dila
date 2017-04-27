@@ -1,6 +1,7 @@
 import pathlib
 import urllib.request
 
+import pytest
 import selenium.webdriver
 import time
 
@@ -12,6 +13,11 @@ msgstr ""
 msgctxt "Disambiguation for context"
 msgid "One"
 msgstr "New translation"
+
+#. Programmer third comment
+msgctxt "Disambiguation for third context"
+msgid "Three"
+msgstr ""
 '''
 
 
@@ -23,13 +29,16 @@ def test_first(selenium: selenium.webdriver.Remote, running_server_url):
     add_resource(selenium, 'second resource')
     time.sleep(1)
     select_resource(selenium, 'first resource')
-    upload_po(selenium)
+    upload_translations_po(selenium)
+    pytest.fail()
     time.sleep(1)
     assert_translations_displayed(selenium)
     go_to_translation_editor(selenium)
     edit_translation(selenium)
     time.sleep(1)
     assert_new_translation_displayed(selenium)
+    upload_new_strings_po(selenium)
+    assert_changed_translation_strings(selenium)
     assert_download_link_works(selenium)
     go_homepage(selenium)
     select_resource(selenium, 'second resource')
@@ -62,11 +71,11 @@ def go_homepage(selenium):
     selenium.find_element_by_link_text('Select resource').click()
 
 
-def upload_po(selenium):
-    file_upload = selenium.find_element_by_id('po_file')
+def upload_translations_po(selenium):
+    file_upload = selenium.find_element_by_id('translations_po_file')
     file_upload.clear()
     file_upload.send_keys(str(pathlib.Path(__file__).parent.parent / 'test.po'))
-    selenium.find_element_by_id('upload_po_file').click()
+    selenium.find_element_by_id('upload_translations_po_file').click()
 
 
 def assert_translations_displayed(selenium):
@@ -74,6 +83,8 @@ def assert_translations_displayed(selenium):
     assert 'File uploaded' in content
     assert 'Disambiguation for context' in content
     assert 'Een' in content
+    assert 'Disambiguation for second context' in content
+    assert 'Twee' in content
 
 
 def go_to_translation_editor(selenium):
@@ -93,6 +104,22 @@ def assert_new_translation_displayed(selenium):
     assert 'Disambiguation for context' in content
     assert 'New translation' in content
 
+
+def upload_new_strings_po(selenium):
+    file_upload = selenium.find_element_by_id('new_strings_po_file')
+    file_upload.clear()
+    file_upload.send_keys(str(pathlib.Path(__file__).parent.parent / 'new_untranslated.po'))
+    selenium.find_element_by_id('new_strings_po_file').click()
+
+
+def assert_changed_translation_strings(selenium):
+    content = selenium.find_element_by_tag_name('body').text
+    assert 'File uploaded' in content
+    assert 'Disambiguation for context' in content
+    assert 'Een' in content
+    assert 'Disambiguation for second context' not in content
+    assert 'Twee' not in content
+    assert 'Disambiguation for third context' in content
 
 def assert_download_link_works(selenium):
     download_link = selenium.find_element_by_link_text('Download po')
