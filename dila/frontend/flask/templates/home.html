@@ -1,4 +1,10 @@
 {% extends "layout.html" %}
 {% block body %}
 <p>There are no resources.</p>
+<form method="POST" action="{{ url_for('main.home') }}" enctype=multipart/form-data>
+{{ form.csrf_token }}
+{{ form.new_resource_name.label }} {{ form.new_resource_name }}
+<input id="add_new_resource" value="Add" type="submit">
+</form>
+
 {% endblock %}

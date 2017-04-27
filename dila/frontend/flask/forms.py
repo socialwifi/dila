@@ -8,3 +8,7 @@ class PoFileUpload(flask_wtf.FlaskForm):
 
 class TranslationForm(flask_wtf.FlaskForm):
     translation = wtforms.StringField()
+
+
+class NewResourceForm(flask_wtf.FlaskForm):
+    new_resource_name = wtforms.StringField('New resource')

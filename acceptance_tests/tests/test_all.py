@@ -1,6 +1,7 @@
 import pathlib
 import urllib.request
 
+import pytest
 import selenium.webdriver
 
 PO_RESULT = '''#
@@ -19,6 +20,7 @@ def test_first(selenium: selenium.webdriver.Remote, running_server_url):
     assert_no_resources_info(selenium)
     add_resource(selenium, 'first resource')
     add_resource(selenium, 'second resource')
+    pytest.fail()
     select_resource(selenium, 'first resource')
     upload_po(selenium)
     selenium.implicitly_wait(2)
@@ -44,10 +46,10 @@ def assert_no_resources_info(selenium):
 
 
 def add_resource(selenium, name):
-    resource_name = selenium.find_element_by_id('new-resource-name')
+    resource_name = selenium.find_element_by_id('new_resource_name')
     resource_name.clear()
     resource_name.send_keys(name)
-    selenium.find_element_by_id('add-new-resource').click()
+    selenium.find_element_by_id('add_new_resource').click()
 
 
 def select_resource(selenium, name):

@@ -14,7 +14,13 @@ class HomeView(views.MethodView):
 
     @property
     def context(self):
-        return {}
+        return {
+            'form': self.form
+        }
+
+    @cached_property
+    def form(self):
+        return forms.NewResourceForm()
 
 
 blueprint.add_url_rule('/', view_func=HomeView.as_view('home'))

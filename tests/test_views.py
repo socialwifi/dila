@@ -15,11 +15,17 @@ msgstr "Żółć"
 '''
 
 
-@mock.patch('dila.application.get_translated_strings', mock.MagicMock())
 def test_home(flask_client):
     response = flask_client.get('/')
     assert '<title>Dila</title>' in response.data.decode()
     assert 'There are no resources.' in response.data.decode()
+
+
+def test_create_resource_form_visible(flask_client):
+    response = flask_client.get('/')
+    print(response.data.decode())
+    assert '<input id="new_resource_name" name="new_resource_name" type="text" value="">' in response.data.decode()
+    assert '<input id="add_new_resource" value="Add" type="submit">' in response.data.decode()
 
 
 @mock.patch('dila.application.get_translated_strings', mock.MagicMock())
