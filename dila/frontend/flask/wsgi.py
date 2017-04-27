@@ -22,13 +22,6 @@ def prepare_application(app):
     def shutdown_session(exception=None):
         application.shutdown_session(exception=exception)
 
-    @app.template_global()
-    def static_url(filename):
-        if config.STATIC_URL:
-            return urllib.parse.urljoin(config.STATIC_URL, filename)
-
-        return flask.url_for('static', filename=filename)
-
 
 def create_app():
     app = flask.Flask(__name__)
@@ -39,4 +32,12 @@ def create_app():
         DEBUG=config.DEBUG,
     )
     app.register_blueprint(views.blueprint)
+
+    @app.template_global()
+    def static_url(filename):
+        if config.STATIC_URL:
+            return urllib.parse.urljoin(config.STATIC_URL, filename)
+
+        return flask.url_for('static', filename=filename)
+
     return app

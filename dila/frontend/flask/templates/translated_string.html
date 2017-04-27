@@ -3,7 +3,7 @@
 <form method="POST"
       action="{{ url_for('main.translated_string', resource_pk=resource_pk, pk=translated_string.pk) }}"
       enctype=multipart/form-data>
-    <table>
+    <table class="table-striped">
         <tr><td>Base string</td><td>{{ translated_string.base_string }}</td></tr>
         <tr><td>Translation</td><td>{{ form.translation }}</td></tr>
         <tr><td>Comment</td><td>{{ translated_string.comment }}</td></tr>
@@ -11,6 +11,6 @@
         <tr><td>Context</td><td>{{ translated_string.context }}</td></tr>
     </table>
     {{ form.csrf_token }}
-    <input type="submit" value="Save" id="submit">
+    <input class="btn btn-info btn-lg" type="submit" value="Save" id="submit">
 </form>
 {% endblock %}

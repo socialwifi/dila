@@ -1,26 +1,42 @@
 {% extends "layout.html" %}
 {% block body %}
-<form method="POST" action="{{ url_for('main.resource', resource_pk=resource_pk) }}" enctype=multipart/form-data>
-    {{ form.csrf_token }}
-    {{ form.po_file.label }} {{ form.po_file }}
-    <input type="submit" value="Upload" id="upload_po_file">
-</form>
-<a href="{{ url_for('main.po_file_download', resource_pk=resource_pk) }}">Download po</a>
-{% if translated_strings %}
-    <table>
-        {% for translated_string in translated_strings %}
+    <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#addTranslations">Add translations from po</button>
+    <div id="addTranslations" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Upload translations.</h4>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" action="{{ url_for('main.resource', resource_pk=resource_pk) }}" enctype=multipart/form-data>
+                        {{ form.csrf_token }}
+                        {{ form.po_file.label }} {{ form.po_file }}
+                        <input class="btn btn-default btn-sm" type="submit" value="Upload" id="upload_po_file">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <a class="btn btn-info btn-lg" href="{{ url_for('main.po_file_download', resource_pk=resource_pk) }}">Download po</a>
+    {% if translated_strings %}
+        <table class="table-striped">
             <tr>
-                <td>
-                    <a href="{{ url_for('main.translated_string', resource_pk=resource_pk,pk=translated_string.pk) }}">
-                        {{ translated_string.base_string }}
-                    </a>
-                </td>
-                <td>{{ translated_string.translation }}</td>
-                <td>{{ translated_string.comment }}</td>
-                <td>{{ translated_string.translator_comment }}</td>
-                <td>{{ translated_string.context }}</td>
+                <th>Base string</th>
+                <th>Translation</th>
+                <th>Context</th>
             </tr>
-        {% endfor %}
-    </table>
-{% endif %}
+            {% for translated_string in translated_strings %}
+                <tr>
+                    <td>
+                        <a href="{{ url_for('main.translated_string', resource_pk=resource_pk,pk=translated_string.pk) }}">
+                            {{ translated_string.base_string }}
+                        </a>
+                    </td>
+                    <td>{{ translated_string.translation }}</td>
+                    <td>{{ translated_string.context }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
 {% endblock %}

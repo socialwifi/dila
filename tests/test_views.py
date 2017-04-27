@@ -21,7 +21,7 @@ def test_home(get_resources, flask_client):
     response = flask_client.get('/')
     assert '<title>Dila</title>' in response.data.decode()
     assert 'There are no resources.' in response.data.decode()
-    assert 'Select resource' not in response.data.decode()
+    assert '<li class="active"><a class="navbar-brand" href="/">Select resource</a></li>' in response.data.decode()
 
 
 @mock.patch('dila.application.get_resources', mock.MagicMock())
@@ -63,7 +63,7 @@ def test_add_resource(add_resource, flask_client):
 @mock.patch('dila.application.upload_translated_po_file', mock.MagicMock())
 def test_resource_page(flask_client):
     response = flask_client.get('/1/')
-    assert re.search('<a href="/">\s*Select resource\s*</a>', response.data.decode())
+    assert '<li class=""><a class="navbar-brand" href="/">Select resource</a></li>' in response.data.decode()
 
 
 @mock.patch('dila.application.get_translated_strings', mock.MagicMock())
@@ -76,7 +76,7 @@ def test_upload_po_file_form_visible(flask_client):
 @mock.patch('dila.application.upload_translated_po_file', mock.MagicMock())
 def test_download_po_file_visible(flask_client):
     response = flask_client.get('/1/')
-    assert re.search('<a href="/1/po-file/">\s*Download po\s*</a>', response.data.decode())
+    assert re.search('<a class="[^"]*" href="/1/po-file/">\s*Download po\s*</a>', response.data.decode())
 
 
 @mock.patch('dila.application.get_translated_strings', mock.MagicMock())

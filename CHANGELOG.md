@@ -5,6 +5,7 @@ Changelog for dila
 ------------------
 
 - Add styles.
+- Add `dila tar_static` command.
 
 
 0.0.6 (2017-04-27)

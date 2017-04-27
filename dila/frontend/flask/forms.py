@@ -3,7 +3,7 @@ import wtforms
 
 
 class PoFileUpload(flask_wtf.FlaskForm):
-    po_file = wtforms.FileField('po file')
+    po_file = wtforms.FileField('Select po file')
 
 
 class TranslationForm(flask_wtf.FlaskForm):
