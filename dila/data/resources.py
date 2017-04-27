@@ -27,3 +27,8 @@ def add_resource(name):
 
 def get_resource(pk):
     return Resource.query.get(pk).as_data()
+
+
+def get_resources():
+    for resource in Resource.query.all():
+        yield resource.as_data()

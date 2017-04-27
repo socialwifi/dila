@@ -10,6 +10,15 @@ def test_adding_resource(db_connection):
     assert data.get_resource(resource_pk).name == 'ketchup'
 
 
+def test_listing_resources(db_connection):
+    data.add_resource('ketchup')
+    result = list(data.get_resources())
+    assert result == [dila.application.structures.Resource(
+        pk=mock.ANY,
+        name='ketchup',
+    )]
+
+
 def test_data_preserves_translated_strings(db_connection):
     resource_pk = data.add_resource('r').pk
     data.add_translated_string(
