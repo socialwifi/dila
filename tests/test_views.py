@@ -21,15 +21,15 @@ def test_home(flask_client):
     assert 'There are no resources.' in response.data.decode()
 
 
-def test_create_resource_form_visible(flask_client):
+def test_add_resource_form_visible(flask_client):
     response = flask_client.get('/')
     print(response.data.decode())
     assert '<input id="new_resource_name" name="new_resource_name" type="text" value="">' in response.data.decode()
     assert '<input id="add_new_resource" value="Add" type="submit">' in response.data.decode()
 
 
-@mock.patch('dila.application.create_resource')
-def test_create_resource(create_resource, flask_client):
+@mock.patch('dila.application.add_resource')
+def test_add_resource(add_resource, flask_client):
     response = flask_client.post(
         '/',
         data={
@@ -39,7 +39,7 @@ def test_create_resource(create_resource, flask_client):
     assert response.status_code == 302
     response = flask_client.get(response.location)
     assert 'Resource created' in response.data.decode()
-    create_resource.assert_called_with('new')
+    add_resource.assert_called_with('new')
 
 
 @mock.patch('dila.application.get_translated_strings', mock.MagicMock())
