@@ -6,3 +6,4 @@ Flask-WTF
 polib
 psycopg2
 SQLAlchemy
+sqlalchemy-postgres-autocommit

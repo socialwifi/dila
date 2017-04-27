@@ -1,11 +1,11 @@
 import sqlalchemy.ext.declarative
 import sqlalchemy.orm
 
-from dila.data import postgres_autocommit
+from sqlalchemy_postgres_autocommit import databases
 from dila import config
 
 
-database = postgres_autocommit.Database()
+database = databases.Database()
 session = sqlalchemy.orm.scoped_session(database.Session)
 Base = sqlalchemy.ext.declarative.declarative_base()
 Base.query = session.query_property()
