@@ -11,10 +11,11 @@ class Resource(engine.Base):
     id = sqlalchemy.Column(postgres_dialect.UUID(as_uuid=True), default=uuid.uuid4,
                            server_default=sqlalchemy.text("uuid_generate_v4()"), primary_key=True,
                            nullable=False)
+    name = sqlalchemy.Column(sqlalchemy.Text(), nullable=False)
 
 
-def add_resource():
-    resource = Resource()
+def add_resource(name):
+    resource = Resource(name=name)
     engine.session.add(resource)
     engine.session.flush()
     return resource.id
