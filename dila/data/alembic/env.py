@@ -7,12 +7,10 @@ import sqlalchemy.engine
 from dila.data import engine
 from dila import config as dila_config
 
-from dila import application
 from dila.frontend import initialize
 
 __import__('dila.data.translated_strings')
-initialize.initialize_config()
-application.setup()
+initialize.initialize()
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

@@ -3,6 +3,10 @@ import signal
 import cmd2
 import sys
 
+import os
+
+import pathlib
+
 from dila.frontend import flask
 from dila.frontend import initialize
 
@@ -21,6 +25,12 @@ class Dila(cmd2.Cmd):
     def do_run_dev_server(self, arg):
         print('Running dev server')
         flask.main(initialized=True).run(host='0.0.0.0', port=80)
+
+    def do_migrate(self, arg):
+        print('migrating')
+        os.execv('/usr/local/bin/alembic', [
+            'alembic', '-c', str(pathlib.Path(__file__).parent.parent / 'alembic.ini'),
+            'upgrade', 'head'])
 
 
 def run():
