@@ -4,7 +4,7 @@ Changelog for dila
 0.0.5 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Fix including allembic versions.
 
 
 0.0.4 (2017-04-27)
