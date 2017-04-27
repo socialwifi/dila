@@ -53,14 +53,14 @@ def test_get_translated_strings(get_translated_strings):
 def test_get_translated_strings(get_translated_string):
     get_translated_string.return_value = 'data_result'
     result = application.get_translated_string('1', '32')
-    get_translated_string.assert_called_with('1', '32')
+    get_translated_string.assert_called_with('32')
     assert result == 'data_result'
 
 
 @mock.patch('dila.data.set_translated_string')
 def test_set_translated_strings(set_translated_string):
     application.set_translated_string('1', '32', translation='x')
-    set_translated_string.assert_called_with('1', '32', translation='x')
+    set_translated_string.assert_called_with('32', translation='x')
 
 
 @mock.patch('dila.data.get_translated_strings')
