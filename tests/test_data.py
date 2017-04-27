@@ -5,8 +5,13 @@ import dila.application.translations
 from dila import data
 
 
+def test_adding_resource(db_connection):
+    resource_pk = data.add_resource('ketchup').pk
+    assert data.get_resource(resource_pk).name == 'ketchup'
+
+
 def test_data_preserves_translated_strings(db_connection):
-    resource_pk = data.add_resource('r')
+    resource_pk = data.add_resource('r').pk
     data.add_translated_string(
         resource_pk, 'x', translation='y', comment='comment', translator_comment='tcomment', context='ctx')
     preserved_strings = list(data.get_translated_strings(resource_pk))
@@ -20,8 +25,9 @@ def test_data_preserves_translated_strings(db_connection):
             translator_comment='tcomment',
         )]
 
+
 def test_data_defaults_to_empty_translated_strings(db_connection):
-    resource_pk = data.add_resource('r')
+    resource_pk = data.add_resource('r').pk
     data.add_translated_string(
         resource_pk, 'x', translation=None, comment=None, translator_comment=None, context=None)
     preserved_strings = list(data.get_translated_strings(resource_pk))
@@ -37,7 +43,7 @@ def test_data_defaults_to_empty_translated_strings(db_connection):
 
 
 def test_fetching_one_translated_string(db_connection):
-    resource_pk = data.add_resource('r')
+    resource_pk = data.add_resource('r').pk
     data.add_translated_string(
         resource_pk, 'x', translation='y', comment='comment', translator_comment='tcomment', context='ctx')
     preserved_string_pk = list(data.get_translated_strings(resource_pk))[0].pk
@@ -53,7 +59,7 @@ def test_fetching_one_translated_string(db_connection):
 
 
 def test_updating_one_translated_string(db_connection):
-    resource_pk = data.add_resource('r')
+    resource_pk = data.add_resource('r').pk
     data.add_translated_string(
         resource_pk, 'x', translation='y', comment='comment', translator_comment='tcomment', context='ctx')
     preserved_string_pk = list(data.get_translated_strings(resource_pk))[0].pk
