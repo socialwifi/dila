@@ -1,6 +1,8 @@
 {% extends "layout.html" %}
 {% block body %}
-<form method="POST" action="{{ url_for('main.translated_string', pk=translated_string.pk) }}" enctype=multipart/form-data>
+<form method="POST"
+      action="{{ url_for('main.translated_string', resource_pk=resource_pk, pk=translated_string.pk) }}"
+      enctype=multipart/form-data>
     <table>
         <tr><td>Base string</td><td>{{ translated_string.base_string }}</td></tr>
         <tr><td>Translation</td><td>{{ form.translation }}</td></tr>

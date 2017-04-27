@@ -12,11 +12,27 @@ class HomeView(views.MethodView):
     def get(self):
         return flask.render_template('home.html', **self.context)
 
+    @property
+    def context(self):
+        return {}
+
+
+blueprint.add_url_rule('/', view_func=HomeView.as_view('home'))
+
+
+class ResourceView(views.MethodView):
+    def dispatch_request(self, *args, resource_pk):
+        self.resource_pk = resource_pk
+        return super().dispatch_request(*args)
+
+    def get(self):
+        return flask.render_template('resource.html', **self.context)
+
     def post(self):
         if self.form.validate():
             application.upload_translated_po_file(flask.request.files[self.form.po_file.name].read().decode())
             flask.flash('File uploaded')
-            return flask.redirect(flask.url_for('main.home'))
+            return flask.redirect(flask.url_for('main.resource', resource_pk=self.resource_pk))
         else:
             return self.get()
 
@@ -24,7 +40,8 @@ class HomeView(views.MethodView):
     def context(self):
         return {
             'translated_strings': self.translated_strings,
-            'form': self.form
+            'form': self.form,
+            'resource_pk': self.resource_pk,
         }
 
     @cached_property
@@ -35,12 +52,13 @@ class HomeView(views.MethodView):
     def translated_strings(self):
         return application.get_translated_strings()
 
-blueprint.add_url_rule('/', view_func=HomeView.as_view('home'))
+blueprint.add_url_rule('/<resource_pk>/', view_func=ResourceView.as_view('resource'))
 
 
 class TranslatedStringEditor(views.MethodView):
-    def dispatch_request(self, *args, pk):
+    def dispatch_request(self, *args, resource_pk, pk):
         self.pk = pk
+        self.resource_pk = resource_pk
         return super().dispatch_request(*args)
 
     def get(self):
@@ -50,7 +68,7 @@ class TranslatedStringEditor(views.MethodView):
         if self.form.validate():
             application.set_translated_string(self.pk, translation=self.form.data['translation'])
             flask.flash('Translation changed')
-            return flask.redirect(flask.url_for('main.home'))
+            return flask.redirect(flask.url_for('main.resource', resource_pk=self.resource_pk))
         else:
             return self.get()
 
@@ -59,6 +77,7 @@ class TranslatedStringEditor(views.MethodView):
         return {
             'form': self.form,
             'translated_string': self.translated_string,
+            'resource_pk': self.resource_pk,
         }
 
     @cached_property
@@ -70,14 +89,14 @@ class TranslatedStringEditor(views.MethodView):
         return application.get_translated_string(self.pk)
 
 
-blueprint.add_url_rule('/edit/<pk>/', view_func=TranslatedStringEditor.as_view('translated_string'))
+blueprint.add_url_rule('/<resource_pk>/edit/<pk>/', view_func=TranslatedStringEditor.as_view('translated_string'))
 
 
 class PoFileDownload(views.MethodView):
-    def get(self):
+    def get(self, *args, resource_pk):
         response = flask.make_response(application.get_po_file())
         response.headers["Content-Disposition"] = "attachment; filename=translations.po"
         return response
 
 
-blueprint.add_url_rule('/po-file/', view_func=PoFileDownload.as_view('po_file_download'))
+blueprint.add_url_rule('/<resource_pk>/po-file/', view_func=PoFileDownload.as_view('po_file_download'))

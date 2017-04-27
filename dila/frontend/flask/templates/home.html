@@ -1,26 +1,4 @@
 {% extends "layout.html" %}
 {% block body %}
-<form method="POST" action="{{ url_for('main.home') }}" enctype=multipart/form-data>
-    {{ form.csrf_token }}
-    {{ form.po_file.label }} {{ form.po_file }}
-    <input type="submit" value="Upload" id="upload_po_file">
-</form>
-<a href="{{ url_for('main.po_file_download') }}">Download po</a>
-{% if translated_strings %}
-    <table>
-        {% for translated_string in translated_strings %}
-            <tr>
-                <td>
-                    <a href="{{ url_for('main.translated_string', pk=translated_string.pk) }}">
-                        {{ translated_string.base_string }}
-                    </a>
-                </td>
-                <td>{{ translated_string.translation }}</td>
-                <td>{{ translated_string.comment }}</td>
-                <td>{{ translated_string.translator_comment }}</td>
-                <td>{{ translated_string.context }}</td>
-            </tr>
-        {% endfor %}
-    </table>
-{% endif %}
+<p>There are no resources.</p>
 {% endblock %}
