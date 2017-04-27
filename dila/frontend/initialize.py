@@ -1,5 +1,11 @@
 import os
+from dila import application
 from dila import config
+
+
+def initialize():
+    initialize_config()
+    application.setup()
 
 
 def initialize_config():

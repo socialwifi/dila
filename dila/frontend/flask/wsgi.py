@@ -2,10 +2,13 @@ import flask
 
 from dila import application
 from dila import config
+from dila.frontend import initialize
 from dila.frontend.flask import views
 
 
-def main():
+def main(initialized=False):
+    if not initialized:
+        initialize.initialize()
     app = create_app()
 
     prepare_application(app)
