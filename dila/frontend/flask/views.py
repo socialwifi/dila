@@ -12,6 +12,14 @@ class HomeView(views.MethodView):
     def get(self):
         return flask.render_template('home.html', **self.context)
 
+    def post(self):
+        if self.form.validate():
+            application.create_resource(self.form.new_resource_name.data)
+            flask.flash('Resource created')
+            return flask.redirect(flask.url_for('main.home'))
+        else:
+            return self.get()
+
     @property
     def context(self):
         return {
