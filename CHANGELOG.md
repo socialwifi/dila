@@ -4,7 +4,7 @@ Changelog for dila
 0.0.4 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Make `dila migrate` work from everywhere.
 
 
 0.0.3 (2017-04-27)
@@ -16,7 +16,7 @@ Changelog for dila
 0.0.1 (2017-04-27)
 ------------------
 
-- Wsgi_app is accesible from package root.
+- Wsgi\_app is accesible from package root.
 
 
 0.0.0 (2017-04-27)
