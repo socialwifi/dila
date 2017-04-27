@@ -27,7 +27,7 @@ class TranslatedString(engine.Base):
         )
 
 
-def add_translated_string(base_string, *, translation, comment, translator_comment, context):
+def add_translated_string(resource_pk, base_string, *, translation, comment, translator_comment, context):
     engine.session.add(TranslatedString(
         base_string=base_string, translation=translation, comment=comment, translator_comment=translator_comment,
         context=context
@@ -35,16 +35,16 @@ def add_translated_string(base_string, *, translation, comment, translator_comme
     engine.session.flush()
 
 
-def get_translated_strings():
+def get_translated_strings(resource_pk):
     for translated_string in TranslatedString.query.all():
         yield translated_string.as_data()
 
 
-def get_translated_string(pk):
+def get_translated_string(resource_pk, pk):
     return TranslatedString.query.get(pk).as_data()
 
 
-def set_translated_string(pk, **kwargs):
+def set_translated_string(resource_pk, pk, **kwargs):
     update = {
         getattr(TranslatedString, key): value for key, value in kwargs.items()
     }

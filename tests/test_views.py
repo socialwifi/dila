@@ -47,7 +47,7 @@ def test_upload_po_file(upload_translated_po_file, flask_client):
     assert response.status_code == 302
     response = flask_client.get(response.location)
     assert 'File uploaded' in response.data.decode()
-    upload_translated_po_file.assert_called_with(test_po)
+    upload_translated_po_file.assert_called_with('1', test_po)
 
 
 @mock.patch('dila.application.get_translated_strings')
@@ -96,7 +96,7 @@ def test_post_translation_form(set_translated_string, get_translated_string, fla
     assert response.status_code == 302
     response = flask_client.get(response.location)
     assert 'Translation changed' in response.data.decode()
-    set_translated_string.assert_called_with('34', translation='new-translation')
+    set_translated_string.assert_called_with('1', '34', translation='new-translation')
 
 
 @mock.patch('dila.application.get_po_file')

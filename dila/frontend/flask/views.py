@@ -30,7 +30,8 @@ class ResourceView(views.MethodView):
 
     def post(self):
         if self.form.validate():
-            application.upload_translated_po_file(flask.request.files[self.form.po_file.name].read().decode())
+            po_content = flask.request.files[self.form.po_file.name].read().decode()
+            application.upload_translated_po_file(self.resource_pk, po_content)
             flask.flash('File uploaded')
             return flask.redirect(flask.url_for('main.resource', resource_pk=self.resource_pk))
         else:
@@ -50,7 +51,7 @@ class ResourceView(views.MethodView):
 
     @cached_property
     def translated_strings(self):
-        return application.get_translated_strings()
+        return application.get_translated_strings(self.resource_pk)
 
 blueprint.add_url_rule('/<resource_pk>/', view_func=ResourceView.as_view('resource'))
 
@@ -66,7 +67,7 @@ class TranslatedStringEditor(views.MethodView):
 
     def post(self):
         if self.form.validate():
-            application.set_translated_string(self.pk, translation=self.form.data['translation'])
+            application.set_translated_string(self.resource_pk, self.pk, translation=self.form.data['translation'])
             flask.flash('Translation changed')
             return flask.redirect(flask.url_for('main.resource', resource_pk=self.resource_pk))
         else:
@@ -86,7 +87,7 @@ class TranslatedStringEditor(views.MethodView):
 
     @cached_property
     def translated_string(self):
-        return application.get_translated_string(self.pk)
+        return application.get_translated_string(self.resource_pk, self.pk)
 
 
 blueprint.add_url_rule('/<resource_pk>/edit/<pk>/', view_func=TranslatedStringEditor.as_view('translated_string'))
@@ -94,7 +95,7 @@ blueprint.add_url_rule('/<resource_pk>/edit/<pk>/', view_func=TranslatedStringEd
 
 class PoFileDownload(views.MethodView):
     def get(self, *args, resource_pk):
-        response = flask.make_response(application.get_po_file())
+        response = flask.make_response(application.get_po_file(resource_pk))
         response.headers["Content-Disposition"] = "attachment; filename=translations.po"
         return response
 
