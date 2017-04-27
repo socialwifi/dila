@@ -21,6 +21,7 @@ def test_home(get_resources, flask_client):
     response = flask_client.get('/')
     assert '<title>Dila</title>' in response.data.decode()
     assert 'There are no resources.' in response.data.decode()
+    assert 'Select resource' not in response.data.decode()
 
 
 @mock.patch('dila.application.get_resources', mock.MagicMock())
@@ -56,6 +57,13 @@ def test_add_resource(add_resource, flask_client):
     response = flask_client.get(response.location)
     assert 'Resource created' in response.data.decode()
     add_resource.assert_called_with('new')
+
+
+@mock.patch('dila.application.get_translated_strings', mock.MagicMock())
+@mock.patch('dila.application.upload_translated_po_file', mock.MagicMock())
+def test_resource_page(flask_client):
+    response = flask_client.get('/1/')
+    assert re.search('<a href="/">\s*Select resource\s*</a>', response.data.decode())
 
 
 @mock.patch('dila.application.get_translated_strings', mock.MagicMock())

@@ -1,4 +1,5 @@
 {% extends "layout.html" %}
+{% block homepage_link %} {% endblock %}
 {% block body %}
 <form method="POST" action="{{ url_for('main.home') }}" enctype=multipart/form-data>
 {{ form.csrf_token }}
