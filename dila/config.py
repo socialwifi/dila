@@ -5,6 +5,7 @@ SECRET_KEY = None
 ENV = 'production'
 DEBUG = False
 DATABASE_URL = ''
+STATIC_URL = ''
 
 
 def setup_from_module(module_name):

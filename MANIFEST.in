@@ -4,4 +4,5 @@ include README.md
 include base_requirements.txt
 include dila/alembic.ini
 include dila/frontend/flask/templates/*
+include dila/frontend/flask/static/*
 prune tests

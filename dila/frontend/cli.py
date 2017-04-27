@@ -20,6 +20,7 @@ def register_termination_signals():
     for signum in TERMINATION_SIGNALS:
         signal.signal(signum, terminate)
 
+
 class Dila(cmd2.Cmd):
     """Dila Commandline."""
     def do_run_dev_server(self, arg):
@@ -31,6 +32,11 @@ class Dila(cmd2.Cmd):
         os.execv('/usr/local/bin/alembic', [
             'alembic', '-c', str(pathlib.Path(__file__).parent.parent / 'alembic.ini'),
             'upgrade', 'head'])
+
+    def do_tar_static(self, arg):
+        print('migrating')
+        os.execv('/bin/tar', [
+            'tar', '-c', '-C', str(pathlib.Path(__file__).parent / 'flask/static'), '.'])
 
 
 def run():

@@ -1,3 +1,5 @@
+import urllib.parse
+
 import flask
 
 from dila import application
@@ -19,6 +21,13 @@ def prepare_application(app):
     @app.teardown_appcontext
     def shutdown_session(exception=None):
         application.shutdown_session(exception=exception)
+
+    @app.template_global()
+    def static_url(filename):
+        if config.STATIC_URL:
+            return urllib.parse.urljoin(config.STATIC_URL, filename)
+
+        return flask.url_for('static', filename=filename)
 
 
 def create_app():

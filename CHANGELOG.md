@@ -1,10 +1,10 @@
 Changelog for dila
 =================
 
-0.0.7 (unreleased)
+0.1.0 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Add styles.
 
 
 0.0.6 (2017-04-27)
