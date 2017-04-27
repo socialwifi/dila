@@ -6,7 +6,7 @@ def add_resource(resource_name):
 
 
 def get_resources():
-    return data.get_resources()
+    return list(data.get_resources())
 
 
 def get_resource(pk):

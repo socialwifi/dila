@@ -1,5 +1,7 @@
 from unittest import mock
 
+import itertools
+
 import dila.application.resources
 from dila.application import structures
 
@@ -38,10 +40,17 @@ def test_add_resource(add_resource):
 
 @mock.patch('dila.data.get_resources')
 def test_get_resources(get_resources):
-    get_resources.return_value = 'data_result'
+    get_resources.return_value = ['data_result']
     result = application.get_resources()
     get_resources.assert_called_with()
-    assert result == 'data_result'
+    assert result == ['data_result']
+
+
+@mock.patch('dila.data.get_resources')
+def test_get_resources_evaluates_iterator(get_resources):
+    get_resources.return_value = itertools.repeat(0, 0)
+    result = application.get_resources()
+    assert result == []
 
 
 @mock.patch('dila.data.get_resource')

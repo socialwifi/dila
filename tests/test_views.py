@@ -15,12 +15,15 @@ msgstr "Żółć"
 '''
 
 
-def test_home(flask_client):
+@mock.patch('dila.application.get_resources')
+def test_home(get_resources, flask_client):
+    get_resources.return_value = []
     response = flask_client.get('/')
     assert '<title>Dila</title>' in response.data.decode()
     assert 'There are no resources.' in response.data.decode()
 
 
+@mock.patch('dila.application.get_resources', mock.MagicMock())
 def test_add_resource_form_visible(flask_client):
     response = flask_client.get('/')
     print(response.data.decode())
@@ -28,6 +31,19 @@ def test_add_resource_form_visible(flask_client):
     assert '<input id="add_new_resource" value="Add" type="submit">' in response.data.decode()
 
 
+@mock.patch('dila.application.get_resources')
+def test_links_to_resource_page(get_resources, flask_client):
+    get_resources.return_value = [
+        structures.Resource(
+            '34',
+            'nice_language'
+        )
+    ]
+    response = flask_client.get('/')
+    assert re.search('<a href="/34/">\s+nice_language\s+</a>', response.data.decode())
+
+
+@mock.patch('dila.application.get_resources', mock.MagicMock())
 @mock.patch('dila.application.add_resource')
 def test_add_resource(add_resource, flask_client):
     response = flask_client.post(

@@ -23,8 +23,13 @@ class HomeView(views.MethodView):
     @property
     def context(self):
         return {
+            'resources': self.resources,
             'form': self.form
         }
+
+    @cached_property
+    def resources(self):
+        return application.get_resources()
 
     @cached_property
     def form(self):

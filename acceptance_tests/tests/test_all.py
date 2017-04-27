@@ -21,8 +21,8 @@ def test_first(selenium: selenium.webdriver.Remote, running_server_url):
     add_resource(selenium, 'first resource')
     selenium.implicitly_wait(2)
     add_resource(selenium, 'second resource')
+    selenium.implicitly_wait(2)
     select_resource(selenium, 'first resource')
-    pytest.fail()
     upload_po(selenium)
     selenium.implicitly_wait(2)
     assert_translations_displayed(selenium)
@@ -32,6 +32,7 @@ def test_first(selenium: selenium.webdriver.Remote, running_server_url):
     assert_new_translation_displayed(selenium)
     assert_download_link_works(selenium)
     go_homepage(selenium)
+    pytest.fail()
     select_resource(selenium, 'first resource')
     assert_no_translations_displayed(selenium)
 
