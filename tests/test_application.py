@@ -1,5 +1,6 @@
 from unittest import mock
 
+import dila.application.resources
 from dila.application import structures
 
 from dila import application
@@ -24,6 +25,15 @@ msgctxt "Disambiguation for context"
 msgid "Yellow"
 msgstr "Żółć"
 '''
+
+
+@mock.patch('dila.data.add_resource')
+def test_add_resource(add_resource):
+    dila.application.resources.add_resource('Next')
+    assert add_resource.mock_calls == [
+        mock.call(
+            'Next',
+        )]
 
 
 @mock.patch('dila.data.add_translated_string')
