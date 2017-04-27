@@ -1,8 +1,8 @@
 import pathlib
 import urllib.request
 
-import pytest
 import selenium.webdriver
+import time
 
 PO_RESULT = '''#
 msgid ""
@@ -19,21 +19,21 @@ def test_first(selenium: selenium.webdriver.Remote, running_server_url):
     open_homepage(running_server_url, selenium)
     assert_no_resources_info(selenium)
     add_resource(selenium, 'first resource')
-    selenium.implicitly_wait(2)
+    time.sleep(1)
     add_resource(selenium, 'second resource')
-    selenium.implicitly_wait(2)
+    time.sleep(1)
     select_resource(selenium, 'first resource')
     upload_po(selenium)
-    selenium.implicitly_wait(2)
+    time.sleep(1)
     assert_translations_displayed(selenium)
     go_to_translation_editor(selenium)
     edit_translation(selenium)
-    selenium.implicitly_wait(2)
+    time.sleep(1)
     assert_new_translation_displayed(selenium)
     assert_download_link_works(selenium)
     go_homepage(selenium)
-    pytest.fail()
-    select_resource(selenium, 'first resource')
+    select_resource(selenium, 'second resource')
+    time.sleep(1)
     assert_no_translations_displayed(selenium)
 
 
@@ -59,7 +59,7 @@ def select_resource(selenium, name):
 
 
 def go_homepage(selenium):
-    selenium.find_element_by_link_text('homepage').click()
+    selenium.find_element_by_link_text('Select resource').click()
 
 
 def upload_po(selenium):

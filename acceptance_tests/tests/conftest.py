@@ -81,6 +81,7 @@ def selenium_server_ip(selenium_server):
 @pytest.fixture(scope="session")
 def selenium(selenium_server_ip):
     remote = webdriver.Remote('http://{}:4444/wd/hub'.format(selenium_server_ip), desired_capabilities=DesiredCapabilities.FIREFOX)
+    remote.implicitly_wait(2)
     yield remote
     remote.quit()
 
