@@ -1,7 +1,7 @@
 Changelog for dila
 =================
 
-0.0.4 (unreleased)
+0.0.4 (2017-04-27)
 ------------------
 
 - Make `dila migrate` work from everywhere.
