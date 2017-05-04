@@ -1,7 +1,7 @@
 Changelog for dila
 =================
 
-0.1.2 (unreleased)
+0.1.2 (2017-05-04)
 ------------------
 
 - Fix `dila tar_static`
