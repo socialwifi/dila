@@ -24,10 +24,12 @@ def register_termination_signals():
 class Dila(cmd2.Cmd):
     """Dila Commandline."""
     def do_run_dev_server(self, arg):
+        initialize.initialize()
         print('Running dev server')
         flask.main(initialized=True).run(host='0.0.0.0', port=80)
 
     def do_migrate(self, arg):
+        initialize.initialize()
         print('migrating')
         os.execv('/usr/local/bin/alembic', [
             'alembic', '-c', str(pathlib.Path(__file__).parent.parent / 'alembic.ini'),
@@ -42,7 +44,6 @@ class Dila(cmd2.Cmd):
 def run():
     import sys
     register_termination_signals()
-    initialize.initialize()
     if len(sys.argv) > 1:
         Dila().onecmd(' '.join(sys.argv[1:]))
     else:
