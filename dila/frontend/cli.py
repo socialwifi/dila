@@ -36,7 +36,6 @@ class Dila(cmd2.Cmd):
             'upgrade', 'head'])
 
     def do_tar_static(self, arg):
-        print('migrating')
         os.execv('/bin/tar', [
             'tar', '-c', '-C', str(pathlib.Path(__file__).parent / 'flask/static'), '.'])
 
