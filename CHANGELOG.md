@@ -4,7 +4,7 @@ Changelog for dila
 0.1.3 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Add missing jquery.
 
 
 0.1.2 (2017-05-04)
