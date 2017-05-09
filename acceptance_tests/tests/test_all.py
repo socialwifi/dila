@@ -29,21 +29,34 @@ def test_first(selenium: selenium.webdriver.Remote, running_server_url):
     add_resource(selenium, 'second resource')
     time.sleep(1)
     select_resource(selenium, 'first resource')
-    upload_translations_po(selenium)
+    assert_no_language_info(selenium)
     pytest.fail()
+    add_language(selenium, 'dutch', 'nl')
+    time.sleep(1)
+    add_language(selenium, 'polish', 'pl')
+    time.sleep(1)
+    assert_language_selected(selenium, 'polish')
+    select_language(selenium, 'dutch')
+    assert_language_selected(selenium, 'dutch')
+    upload_po(selenium, 'test.po', with_translations=True)
     time.sleep(1)
     assert_translations_displayed(selenium)
     go_to_translation_editor(selenium)
     edit_translation(selenium)
     time.sleep(1)
     assert_new_translation_displayed(selenium)
-    upload_new_strings_po(selenium)
+    upload_po(selenium, 'new_untranslated.po')
     assert_changed_translation_strings(selenium)
     assert_download_link_works(selenium)
     go_homepage(selenium)
     select_resource(selenium, 'second resource')
     time.sleep(1)
     assert_no_translations_displayed(selenium)
+    go_homepage(selenium)
+    select_resource(selenium, 'first resource')
+    select_language(selenium, 'polish')
+    time.sleep(1)
+    assert_strings_without_translations_displayed(selenium)
 
 
 def open_homepage(running_server_url, selenium):
@@ -67,15 +80,41 @@ def select_resource(selenium, name):
     selenium.find_element_by_link_text(name).click()
 
 
+def assert_no_language_info(selenium):
+    content = selenium.find_element_by_tag_name('body').text
+    assert 'There are no languages.' in content
+
+
+def add_language(selenium, name, short):
+    resource_name = selenium.find_element_by_id('new_language_name')
+    resource_name.clear()
+    resource_name.send_keys(name)
+    language_short = selenium.find_element_by_id('new_language_short')
+    language_short.clear()
+    language_short.send_keys(short)
+    selenium.find_element_by_id('add_new_language').click()
+
+
+def select_language(selenium, name):
+    selenium.find_element_by_link_text(name).click()
+
+
+def assert_language_selected(selenium, name):
+    content = selenium.find_element_by_tag_name('body').text
+    assert 'Current language: {}.'.format(name) in content
+
+
 def go_homepage(selenium):
     selenium.find_element_by_link_text('Select resource').click()
 
 
-def upload_translations_po(selenium):
-    file_upload = selenium.find_element_by_id('translations_po_file')
+def upload_po(selenium, filename, with_translations=False):
+    file_upload = selenium.find_element_by_id('po_file')
     file_upload.clear()
-    file_upload.send_keys(str(pathlib.Path(__file__).parent.parent / 'test.po'))
-    selenium.find_element_by_id('upload_translations_po_file').click()
+    file_upload.send_keys(str(pathlib.Path(__file__).parent.parent / filename))
+    if with_translations:
+        selenium.find_element_by_id('apply_translations').click()
+    selenium.find_element_by_id('upload_po_file').click()
 
 
 def assert_translations_displayed(selenium):
@@ -105,13 +144,6 @@ def assert_new_translation_displayed(selenium):
     assert 'New translation' in content
 
 
-def upload_new_strings_po(selenium):
-    file_upload = selenium.find_element_by_id('new_strings_po_file')
-    file_upload.clear()
-    file_upload.send_keys(str(pathlib.Path(__file__).parent.parent / 'new_untranslated.po'))
-    selenium.find_element_by_id('new_strings_po_file').click()
-
-
 def assert_changed_translation_strings(selenium):
     content = selenium.find_element_by_tag_name('body').text
     assert 'File uploaded' in content
@@ -135,3 +167,10 @@ def assert_no_translations_displayed(selenium):
     assert 'File uploaded' not in content
     assert 'Disambiguation for context' not in content
     assert 'New translation' not in content
+
+
+def assert_strings_without_translations_displayed(selenium):
+    content = selenium.find_element_by_tag_name('body').text
+    assert 'Disambiguation for context' in content
+    assert 'One' in content
+    assert 'Een' not in content
