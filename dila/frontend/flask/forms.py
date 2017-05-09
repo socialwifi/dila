@@ -17,3 +17,4 @@ class NewResourceForm(flask_wtf.FlaskForm):
 class NewLanguageForm(flask_wtf.FlaskForm):
     new_language_name = wtforms.StringField('New language')
     new_language_short = wtforms.StringField('Language code')
+    next = wtforms.HiddenField()

@@ -3,7 +3,7 @@ import urllib.parse
 import flask
 
 from dila import config
-from dila.frontend.flask import forms
+from dila.frontend.flask import languages
 
 
 def setup_app(app):
@@ -17,5 +17,5 @@ def setup_app(app):
     @app.context_processor
     def inject_languages_menu():
         return {
-            'languages_form': forms.NewLanguageForm(),
+            'languages_form': languages.get_new_form(),
         }

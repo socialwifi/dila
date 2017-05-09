@@ -4,6 +4,7 @@ from flask import views
 
 from dila import application
 from dila.frontend.flask import forms
+from dila.frontend.flask import languages
 
 blueprint = flask.Blueprint('main', __name__)
 
@@ -37,6 +38,24 @@ class HomeView(views.MethodView):
 
 
 blueprint.add_url_rule('/', view_func=HomeView.as_view('home'))
+
+
+class AddLanguageView(views.MethodView):
+
+    def post(self):
+        if self.form.validate():
+            flask.flash('Language added.')
+            return flask.redirect(self.form.data['next'])
+        else:
+            flask.flash('Failed to add language.')
+            return flask.redirect(self.form.data['next'])
+
+    @cached_property
+    def form(self):
+        return languages.get_new_form()
+
+
+blueprint.add_url_rule('/add-language/', view_func=AddLanguageView.as_view('add_language'))
 
 
 class ResourceView(views.MethodView):

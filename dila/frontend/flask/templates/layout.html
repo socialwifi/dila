@@ -45,10 +45,11 @@
                     <h4 class="modal-title">New language.</h4>
                 </div>
                 <div class="modal-body">
-                    <form method="POST" action="" enctype=multipart/form-data>
+                    <form method="POST" action="{{ url_for('main.add_language') }}" enctype=multipart/form-data>
                         {{ languages_form.csrf_token }}
                         {{ languages_form.new_language_name.label }} {{ languages_form.new_language_name }}
                         {{ languages_form.new_language_short.label }} {{ languages_form.new_language_short }}
+                        {{ languages_form.next }}
                         <input id="add_new_language" value="Add" type="submit">
                     </form>
                 </div>
