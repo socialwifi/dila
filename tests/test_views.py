@@ -68,7 +68,8 @@ def test_add_resource(add_resource, flask_client):
 
 
 @mock.patch('dila.application.get_resources', mock.MagicMock())
-def test_add_language(flask_client):
+@mock.patch('dila.application.add_language')
+def test_add_language(add_language, flask_client):
     response = flask_client.post(
         '/add-language/',
         data={
@@ -80,6 +81,7 @@ def test_add_language(flask_client):
     assert response.status_code == 302
     response = flask_client.get(response.location)
     assert 'Language added' in response.data.decode()
+    add_language.assert_called_with('polish', 'pl')
 
 
 @mock.patch('dila.application.get_translated_strings', mock.MagicMock())

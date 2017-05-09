@@ -9,3 +9,8 @@ Resource = collections.namedtuple(
     'Resource',
     ['pk', 'name']
 )
+
+Language = collections.namedtuple(
+    'Language',
+    ['name', 'code']
+)
