@@ -1,10 +1,9 @@
-import urllib.parse
-
 import flask
 
 from dila import application
 from dila import config
 from dila.frontend import initialize
+from dila.frontend.flask import template_tools
 from dila.frontend.flask import views
 
 
@@ -33,11 +32,6 @@ def create_app():
     )
     app.register_blueprint(views.blueprint)
 
-    @app.template_global()
-    def static_url(filename):
-        if config.STATIC_URL:
-            return urllib.parse.urljoin(config.STATIC_URL, filename)
-
-        return flask.url_for('static', filename=filename)
+    template_tools.setup_app(app)
 
     return app
