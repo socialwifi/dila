@@ -70,6 +70,8 @@ def assert_no_resources_info(selenium):
 
 
 def add_resource(selenium, name):
+    selenium.find_element_by_id('addResourceButton').click()
+    time.sleep(1)
     resource_name = selenium.find_element_by_id('new_resource_name')
     resource_name.clear()
     resource_name.send_keys(name)
