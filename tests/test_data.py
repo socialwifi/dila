@@ -19,6 +19,20 @@ def test_listing_resources(db_connection):
     )]
 
 
+def test_adding_language(db_connection):
+    data.add_language('polish', 'pl')
+    assert data.get_language('pl').name == 'polish'
+
+
+def test_listing_languages(db_connection):
+    data.add_language('polish', 'pl')
+    result = list(data.get_languages())
+    assert result == [dila.application.structures.Language(
+        code='pl',
+        name='polish',
+    )]
+
+
 def test_data_preserves_translated_strings(db_connection):
     resource_pk = data.add_resource('r').pk
     data.add_translated_string(
