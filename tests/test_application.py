@@ -31,7 +31,7 @@ msgstr "Żółć"
 
 @mock.patch('dila.data.add_resource')
 def test_add_resource(add_resource):
-    dila.application.resources.add_resource('Next')
+    dila.application.add_resource('Next')
     assert add_resource.mock_calls == [
         mock.call(
             'Next',
@@ -51,6 +51,14 @@ def test_get_resources_evaluates_iterator(get_resources):
     get_resources.return_value = itertools.repeat(0, 0)
     result = application.get_resources()
     assert result == []
+
+
+@mock.patch('dila.data.get_resource')
+def test_get_resource(get_resource):
+    get_resource.return_value = 'data_result'
+    result = application.get_resource('pk')
+    get_resource.assert_called_with('pk')
+    assert result == 'data_result'
 
 
 @mock.patch('dila.data.get_resource')
