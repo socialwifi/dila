@@ -61,6 +61,38 @@ def test_get_resource(get_resource):
     assert result == 'data_result'
 
 
+@mock.patch('dila.data.add_language')
+def test_add_language(add_language):
+    dila.application.add_language('Polish', 'pl')
+    assert add_language.mock_calls == [
+        mock.call(
+            'Polish', 'pl',
+        )]
+
+
+@mock.patch('dila.data.get_languages')
+def test_get_resources(get_languages):
+    get_languages.return_value = ['data_result']
+    result = application.get_languages()
+    get_languages.assert_called_with()
+    assert result == ['data_result']
+
+
+@mock.patch('dila.data.get_languages')
+def test_get_languages_evaluates_iterator(get_languages):
+    get_languages.return_value = itertools.repeat(0, 0)
+    result = application.get_languages()
+    assert result == []
+
+
+@mock.patch('dila.data.get_language')
+def test_get_language(get_language):
+    get_language.return_value = 'Polski'
+    result = application.get_language('pl')
+    get_language.assert_called_with('pl')
+    assert result == 'Polski'
+
+
 @mock.patch('dila.data.get_resource')
 def test_get_translated_string(get_resource):
     get_resource.return_value = 'data_result'

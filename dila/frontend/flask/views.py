@@ -44,6 +44,8 @@ class AddLanguageView(views.MethodView):
 
     def post(self):
         if self.form.validate():
+            application.add_language(
+                self.form.data['new_language_name'], self.form.data['new_language_short'])
             flask.flash('Language added.')
             return flask.redirect(self.form.data['next'])
         else:
