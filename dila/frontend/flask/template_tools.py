@@ -3,6 +3,7 @@ import urllib.parse
 import flask
 
 from dila import config
+from dila.frontend.flask import forms
 
 
 def setup_app(app):
@@ -12,3 +13,9 @@ def setup_app(app):
         if config.STATIC_URL:
             return urllib.parse.urljoin(config.STATIC_URL, filename)
         return flask.url_for('static', filename=filename)
+
+    @app.context_processor
+    def inject_languages_menu():
+        return {
+            'languages_form': forms.NewLanguageForm(),
+        }

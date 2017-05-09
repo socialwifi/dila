@@ -26,13 +26,35 @@
           <ul class="nav navbar-nav">
             <li class="{% block homepage_link_class %}{% endblock %}"><a class="navbar-brand" href="{{ url_for('main.home') }}">Select resource</a></li>
             <li class="dropdown">
-                <a class="dropdown-toggle" href="#">There are no languages.</a>
-                <div class="dropdown-menu"></div>
+                <a id="languageMenuButton" class="dropdown-toggle" data-toggle="dropdown" href="#">There are no languages.</a>
+                <div class="dropdown-menu">
+                    <button id="addLanguageButton" type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#addLanguage">
+                        Add language
+                    </button>
+                </div>
             </li>
           </ul>
         </div>
       </div>
     </nav>
+    <div id="addLanguage" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">New language.</h4>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" action="" enctype=multipart/form-data>
+                        {{ languages_form.csrf_token }}
+                        {{ languages_form.new_language_name.label }} {{ languages_form.new_language_name }}
+                        {{ languages_form.new_language_short.label }} {{ languages_form.new_language_short }}
+                        <input id="add_new_language" value="Add" type="submit">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="container">
 

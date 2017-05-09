@@ -28,9 +28,16 @@ def test_home(get_resources, flask_client):
 @mock.patch('dila.application.get_resources', mock.MagicMock())
 def test_add_resource_form_visible(flask_client):
     response = flask_client.get('/')
-    print(response.data.decode())
     assert '<input id="new_resource_name" name="new_resource_name" type="text" value="">' in response.data.decode()
     assert '<input id="add_new_resource" value="Add" type="submit">' in response.data.decode()
+
+
+@mock.patch('dila.application.get_resources', mock.MagicMock())
+def test_add_language_form_visible(flask_client):
+    response = flask_client.get('/')
+    assert '<input id="new_language_name" name="new_language_name" type="text" value="">' in response.data.decode()
+    assert '<input id="new_language_short" name="new_language_short" type="text" value="">' in response.data.decode()
+    assert '<input id="add_new_language" value="Add" type="submit">' in response.data.decode()
 
 
 @mock.patch('dila.application.get_resources')

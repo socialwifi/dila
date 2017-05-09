@@ -30,10 +30,10 @@ def test_first(selenium: selenium.webdriver.Remote, running_server_url):
     time.sleep(1)
     select_resource(selenium, 'first resource')
     assert_no_language_info(selenium)
-    pytest.fail()
     add_language(selenium, 'dutch', 'nl')
     time.sleep(1)
     add_language(selenium, 'polish', 'pl')
+    pytest.fail()
     time.sleep(1)
     assert_language_selected(selenium, 'polish')
     select_language(selenium, 'dutch')
@@ -88,6 +88,9 @@ def assert_no_language_info(selenium):
 
 
 def add_language(selenium, name, short):
+    selenium.find_element_by_id('languageMenuButton').click()
+    selenium.find_element_by_id('addLanguageButton').click()
+    time.sleep(1)
     resource_name = selenium.find_element_by_id('new_language_name')
     resource_name.clear()
     resource_name.send_keys(name)
