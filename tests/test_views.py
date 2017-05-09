@@ -21,6 +21,7 @@ def test_home(get_resources, flask_client):
     response = flask_client.get('/')
     assert '<title>Dila</title>' in response.data.decode()
     assert 'There are no resources.' in response.data.decode()
+    assert 'There are no languages.' in response.data.decode()
     assert '<li class="active"><a class="navbar-brand" href="/">Select resource</a></li>' in response.data.decode()
 
 
