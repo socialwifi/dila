@@ -3,9 +3,9 @@ import polib
 from dila import data
 
 
-def get_po_file(resource_pk):
+def get_po_file(language_code, resource_pk):
     po = polib.POFile()
-    for string in data.get_translated_strings(resource_pk):
+    for string in data.get_translated_strings(language_code, resource_pk):
         po.append(polib.POEntry(
             msgid=string.base_string,
             msgstr=string.translation,
@@ -30,12 +30,12 @@ def upload_translated_po_file(resource_pk, content):
             )
 
 
-def get_translated_strings(resource_pk):
-    return data.get_translated_strings(resource_pk)
+def get_translated_strings(language_code, resource_pk):
+    return data.get_translated_strings(language_code, resource_pk)
 
 
-def get_translated_string(pk):
-    return data.get_translated_string(pk)
+def get_translated_string(language_code, pk):
+    return data.get_translated_string(language_code, pk)
 
 
 def set_translated_string(language_code, pk, **kwargs):

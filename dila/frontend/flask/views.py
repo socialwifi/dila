@@ -101,7 +101,7 @@ class ResourceView(views.MethodView):
 
     @cached_property
     def translated_strings(self):
-        return application.get_translated_strings(self.resource_pk)
+        return application.get_translated_strings(self.language_code, self.resource_pk)
 
 
 resource = ResourceView.as_view('resource')
@@ -140,7 +140,7 @@ class TranslatedStringEditor(views.MethodView):
 
     @cached_property
     def translated_string(self):
-        return application.get_translated_string(self.pk)
+        return application.get_translated_string(self.language_code, self.pk)
 
 
 blueprint.add_url_rule('/lang/<language_code>/edit/<pk>/', view_func=TranslatedStringEditor.as_view('translated_string'))
@@ -148,7 +148,7 @@ blueprint.add_url_rule('/lang/<language_code>/edit/<pk>/', view_func=TranslatedS
 
 class PoFileDownload(views.MethodView):
     def get(self, *args, language_code, resource_pk):
-        response = flask.make_response(application.get_po_file(resource_pk))
+        response = flask.make_response(application.get_po_file(language_code, resource_pk))
         response.headers["Content-Disposition"] = "attachment; filename=translations.po"
         return response
 

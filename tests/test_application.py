@@ -96,8 +96,8 @@ def test_get_language(get_language):
 @mock.patch('dila.data.get_resource')
 def test_get_translated_string(get_resource):
     get_resource.return_value = 'data_result'
-    result = application.get_resource('32')
-    get_resource.assert_called_with('32')
+    result = application.get_resource('pl', '32')
+    get_resource.assert_called_with('pl', '32')
     assert result == 'data_result'
 
 
@@ -119,16 +119,16 @@ def test_upload_translated_po_file_with(add_translated_string):
 @mock.patch('dila.data.get_translated_strings')
 def test_get_translated_strings(get_translated_strings):
     get_translated_strings.return_value = 'data_result'
-    result = application.get_translated_strings('1')
-    get_translated_strings.assert_called_with('1')
+    result = application.get_translated_strings('pl', '1')
+    get_translated_strings.assert_called_with('pl', '1')
     assert result == 'data_result'
 
 
 @mock.patch('dila.data.get_translated_string')
 def test_get_translated_string(get_translated_string):
     get_translated_string.return_value = 'data_result'
-    result = application.get_translated_string('32')
-    get_translated_string.assert_called_with('32')
+    result = application.get_translated_string('pl', '32')
+    get_translated_string.assert_called_with('pl', '32')
     assert result == 'data_result'
 
 
@@ -151,5 +151,5 @@ def test_get_po_file(get_translated_strings):
             '1',
         )
     ]
-    result = application.get_po_file('1')
+    result = application.get_po_file('pl', '1')
     assert result == test_result_po

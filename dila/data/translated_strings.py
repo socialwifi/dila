@@ -41,12 +41,12 @@ def add_translated_string(resource_pk, base_string, *, translation, comment, tra
     engine.session.flush()
 
 
-def get_translated_strings(resource_pk):
+def get_translated_strings(language_code, resource_pk):
     for translated_string in TranslatedString.query.filter_by(resource_pk=resource_pk):
         yield translated_string.as_data()
 
 
-def get_translated_string(pk):
+def get_translated_string(language_code, pk):
     return TranslatedString.query.get(pk).as_data()
 
 

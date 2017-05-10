@@ -142,12 +142,20 @@ def test_add_language(add_language, flask_client):
     add_language.assert_called_with('polish', 'pl')
 
 
-@mock.patch('dila.application.get_translated_strings', mock.MagicMock())
 @mock.patch('dila.application.get_languages', mock.MagicMock())
 def test_resource_page(flask_client):
     response = flask_client.get('/res/1/')
     assert re.search('<li class="">\s*<a class="navbar-brand" href="/">\s*Select resource\s*</a>\s*</li>',
                      response.data.decode())
+
+
+@mock.patch('dila.application.get_translated_strings')
+@mock.patch('dila.application.get_languages', mock.MagicMock())
+def test_resource_page_with_selected_language(get_translated_strings, flask_client):
+    response = flask_client.get('/lang/pl/res/1/')
+    assert re.search('<li class="">\s*<a class="navbar-brand" href="/lang/pl/">\s*Select resource\s*</a>\s*</li>',
+                     response.data.decode())
+    get_translated_strings.assert_called_with('pl', '1')
 
 
 @mock.patch('dila.application.get_resources', mock.MagicMock())
