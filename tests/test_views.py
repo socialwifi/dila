@@ -252,6 +252,7 @@ def test_get_translation_form(get_translated_string, flask_client):
     response = flask_client.get('/lang/pl/edit/34/')
     assert re.search('<input id="translation" name="translation" type="text" value="translation-x">',
                      response.data.decode())
+    assert 'action="/lang/pl/edit/34/"' in response.data.decode()
 
 
 @mock.patch('dila.application.get_translated_strings', mock.MagicMock())

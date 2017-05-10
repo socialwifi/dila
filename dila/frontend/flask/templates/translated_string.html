@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block body %}
 <form method="POST"
-      action="{{ url_for('main.translated_string', language_code=language_code, pk=translated_string.pk) }}"
+      action="{{ url_for('main.translated_string', language_code=current_language_code, pk=translated_string.pk) }}"
       enctype=multipart/form-data>
     <table class="table-striped">
         <tr><td>Base string</td><td>{{ translated_string.base_string }}</td></tr>
