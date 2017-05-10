@@ -29,6 +29,7 @@ class TranslatedString(engine.Base):
             self.comment,
             self.translator_comment,
             self.context,
+            self.resource_pk,
         )
 
 
@@ -49,7 +50,7 @@ def get_translated_string(pk):
     return TranslatedString.query.get(pk).as_data()
 
 
-def set_translated_string(pk, **kwargs):
+def set_translated_string(language_code, pk, **kwargs):
     update = {
         getattr(TranslatedString, key): value for key, value in kwargs.items()
     }

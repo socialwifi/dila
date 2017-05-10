@@ -18,4 +18,6 @@ def setup_app(app):
     def inject_languages_menu():
         return {
             'languages_form': languages.get_new_form(),
+            'languages_links': list(languages.get_language_links()),
+            'current_language_code': languages.current_language_code(),
         }

@@ -9,7 +9,7 @@
                     <h4 class="modal-title">Upload translations.</h4>
                 </div>
                 <div class="modal-body">
-                    <form method="POST" action="{{ url_for('main.resource', resource_pk=resource_pk) }}" enctype=multipart/form-data>
+                    <form method="POST" action="{{ url_for('main.resource', language_code=current_language_code, resource_pk=resource_pk) }}" enctype=multipart/form-data>
                         {{ form.csrf_token }}
                         {{ form.po_file.label }} {{ form.po_file }}
                         <input class="btn btn-default btn-sm" type="submit" value="Upload" id="upload_po_file">
@@ -18,7 +18,7 @@
             </div>
         </div>
     </div>
-    <a class="btn btn-info btn-lg" href="{{ url_for('main.po_file_download', resource_pk=resource_pk) }}">Download po</a>
+    <a class="btn btn-info btn-lg" href="{{ url_for('main.po_file_download', language_code=current_language_code, resource_pk=resource_pk) }}">Download po</a>
     {% if translated_strings %}
         <table class="table-striped">
             <tr>
@@ -29,7 +29,7 @@
             {% for translated_string in translated_strings %}
                 <tr>
                     <td>
-                        <a href="{{ url_for('main.translated_string', resource_pk=resource_pk,pk=translated_string.pk) }}">
+                        <a href="{{ url_for('main.translated_string', language_code=current_language_code,pk=translated_string.pk) }}">
                             {{ translated_string.base_string }}
                         </a>
                     </td>

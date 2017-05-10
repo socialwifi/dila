@@ -24,13 +24,20 @@
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-            <li class="{% block homepage_link_class %}{% endblock %}"><a class="navbar-brand" href="{{ url_for('main.home') }}">Select resource</a></li>
+            <li class="{% block homepage_link_class %}{% endblock %}">
+                <a class="navbar-brand" href="{{ url_for('main.home', language_code=current_language_code) }}">
+                    Select resource
+                </a>
+            </li>
             <li class="dropdown">
                 <a id="languageMenuButton" class="dropdown-toggle" data-toggle="dropdown" href="#">There are no languages.</a>
                 <div class="dropdown-menu">
                     <button id="addLanguageButton" type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#addLanguage">
                         Add language
                     </button>
+                    {% for name, link in languages_links %}
+                        <a href="{{ link }}">{{ name }}</a>
+                    {% endfor %}
                 </div>
             </li>
           </ul>

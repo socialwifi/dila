@@ -34,9 +34,9 @@ def get_translated_strings(resource_pk):
     return data.get_translated_strings(resource_pk)
 
 
-def get_translated_string(resource_pk, pk):
+def get_translated_string(pk):
     return data.get_translated_string(pk)
 
 
-def set_translated_string(resource_pk, pk, **kwargs):
-    data.set_translated_string(pk, **kwargs)
+def set_translated_string(language_code, pk, **kwargs):
+    data.set_translated_string(language_code, pk, **kwargs)

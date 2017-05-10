@@ -25,7 +25,7 @@
     <ul class="list-group">
         {% for resource in resources %}
             <li class="list-group-item">
-                <a href="{{ url_for('main.resource', resource_pk=resource.pk) }}">
+                <a href="{{ url_for('main.resource', resource_pk=resource.pk, language_code=current_language_code) }}">
                     {{ resource.name }}
                 </a>
             </li>

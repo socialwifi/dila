@@ -46,6 +46,7 @@ def test_data_preserves_translated_strings(db_connection):
             translation='y',
             comment='comment',
             translator_comment='tcomment',
+            resource_pk=resource_pk,
         )]
 
 
@@ -62,6 +63,7 @@ def test_data_defaults_to_empty_translated_strings(db_connection):
             translation='',
             comment='',
             translator_comment='',
+            resource_pk=resource_pk,
         )]
 
 
@@ -78,6 +80,7 @@ def test_fetching_one_translated_string(db_connection):
             translation='y',
             comment='comment',
             translator_comment='tcomment',
+            resource_pk=resource_pk,
         )
 
 
@@ -86,7 +89,7 @@ def test_updating_one_translated_string(db_connection):
     data.add_translated_string(
         resource_pk, 'x', translation='y', comment='comment', translator_comment='tcomment', context='ctx')
     preserved_string_pk = list(data.get_translated_strings(resource_pk))[0].pk
-    data.set_translated_string(preserved_string_pk, translation='new')
+    data.set_translated_string('pl', preserved_string_pk, translation='new')
     preserved_string = data.get_translated_string(preserved_string_pk)
     assert preserved_string == dila.application.structures.TranslatedStringData(
         pk=preserved_string_pk,
@@ -95,4 +98,5 @@ def test_updating_one_translated_string(db_connection):
         translation='new',
         comment='comment',
         translator_comment='tcomment',
+        resource_pk=resource_pk,
     )
