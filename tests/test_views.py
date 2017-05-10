@@ -271,6 +271,7 @@ def test_post_translation_form(set_translated_string, get_translated_string, fla
     )
     response = flask_client.post('/lang/pl/edit/34/', data={'translation': 'new-translation'})
     assert response.status_code == 302
+    assert response.location == 'http://localhost/lang/pl/res/1/'
     response = flask_client.get(response.location)
     assert 'Translation changed' in response.data.decode()
     set_translated_string.assert_called_with('pl', '34', translation='new-translation')

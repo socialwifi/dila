@@ -122,7 +122,11 @@ class TranslatedStringEditor(views.MethodView):
         if self.form.validate():
             application.set_translated_string(self.language_code, self.pk, translation=self.form.data['translation'])
             flask.flash('Translation changed')
-            return flask.redirect(flask.url_for('main.resource', resource_pk=self.translated_string.resource_pk))
+            return flask.redirect(
+                flask.url_for('main.resource',
+                              language_code=self.language_code,
+                              resource_pk=self.translated_string.resource_pk)
+            )
         else:
             return self.get()
 
