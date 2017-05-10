@@ -35,8 +35,8 @@ def test_listing_languages(db_connection):
 
 def test_data_preserves_translated_strings(db_connection):
     resource_pk = data.add_resource('r').pk
-    data.add_translated_string(
-        resource_pk, 'x', translation='y', comment='comment', translator_comment='tcomment', context='ctx')
+    string_pk = data.add_translated_string(resource_pk, 'x', comment='comment', context='ctx')
+    data.set_translated_string('pl', string_pk, translation='y', translator_comment='tcomment')
     preserved_strings = list(data.get_translated_strings('pl', resource_pk))
     assert preserved_strings == [
         dila.application.structures.TranslatedStringData(
@@ -52,8 +52,7 @@ def test_data_preserves_translated_strings(db_connection):
 
 def test_data_defaults_to_empty_translated_strings(db_connection):
     resource_pk = data.add_resource('r').pk
-    data.add_translated_string(
-        resource_pk, 'x', translation=None, comment=None, translator_comment=None, context=None)
+    data.add_translated_string(resource_pk, 'x', comment=None, context=None)
     preserved_strings = list(data.get_translated_strings('pl', resource_pk))
     assert preserved_strings == [
         dila.application.structures.TranslatedStringData(
@@ -69,12 +68,11 @@ def test_data_defaults_to_empty_translated_strings(db_connection):
 
 def test_fetching_one_translated_string(db_connection):
     resource_pk = data.add_resource('r').pk
-    data.add_translated_string(
-        resource_pk, 'x', translation='y', comment='comment', translator_comment='tcomment', context='ctx')
-    preserved_string_pk = list(data.get_translated_strings('pl', resource_pk))[0].pk
-    preserved_string = data.get_translated_string('pl', preserved_string_pk)
+    string_pk = data.add_translated_string(resource_pk, 'x', comment='comment', context='ctx')
+    data.set_translated_string('pl', string_pk, translation='y', translator_comment='tcomment')
+    preserved_string = data.get_translated_string('pl', string_pk)
     assert preserved_string == dila.application.structures.TranslatedStringData(
-            pk=preserved_string_pk,
+            pk=string_pk,
             base_string='x',
             context='ctx',
             translation='y',
@@ -86,13 +84,13 @@ def test_fetching_one_translated_string(db_connection):
 
 def test_updating_one_translated_string(db_connection):
     resource_pk = data.add_resource('r').pk
-    data.add_translated_string(
-        resource_pk, 'x', translation='y', comment='comment', translator_comment='tcomment', context='ctx')
-    preserved_string_pk = list(data.get_translated_strings('pl', resource_pk))[0].pk
-    data.set_translated_string('pl', preserved_string_pk, translation='new')
-    preserved_string = data.get_translated_string('pl', preserved_string_pk)
+    string_pk = data.add_translated_string(
+        resource_pk, 'x', comment='comment', context='ctx')
+    data.set_translated_string('pl', string_pk, translation='y', translator_comment='tcomment')
+    data.set_translated_string('pl', string_pk, translation='new')
+    preserved_string = data.get_translated_string('pl', string_pk)
     assert preserved_string == dila.application.structures.TranslatedStringData(
-        pk=preserved_string_pk,
+        pk=string_pk,
         base_string='x',
         context='ctx',
         translation='new',

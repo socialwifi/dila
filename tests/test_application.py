@@ -102,18 +102,36 @@ def test_get_translated_string(get_resource):
 
 
 @mock.patch('dila.data.add_translated_string')
-def test_upload_translated_po_file_with(add_translated_string):
-    application.upload_translated_po_file('1', test_po)
+@mock.patch('dila.data.set_translated_string')
+def test_upload_po_file_with_translations(set_translated_string, add_translated_string):
+    add_translated_string.return_value = 'string_pk'
+    application.upload_po_file('1', test_po, translated_language_code='pl')
     assert add_translated_string.mock_calls == [
         mock.call(
             '1',
             'Yellow',
             context='Disambiguation for context',
-            translation='Żółć',
             comment='Programmer comment',
+        )]
+    assert set_translated_string.mock_calls == [
+        mock.call(
+            'pl',
+            'string_pk',
+            translation='Żółć',
             translator_comment='',
         )]
-    application.upload_translated_po_file('1', test_po)
+
+
+@mock.patch('dila.data.add_translated_string')
+def test_upload_po_file_without_translations(add_translated_string):
+    application.upload_po_file('1', test_po)
+    assert add_translated_string.mock_calls == [
+        mock.call(
+            '1',
+            'Yellow',
+            context='Disambiguation for context',
+            comment='Programmer comment',
+        )]
 
 
 @mock.patch('dila.data.get_translated_strings')

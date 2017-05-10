@@ -33,12 +33,14 @@ class TranslatedString(engine.Base):
         )
 
 
-def add_translated_string(resource_pk, base_string, *, translation, comment, translator_comment, context):
-    engine.session.add(TranslatedString(
-        resource_pk=resource_pk, base_string=base_string, translation=translation, comment=comment,
-        translator_comment=translator_comment, context=context
-    ))
+def add_translated_string(resource_pk, base_string, *, comment, context):
+    translated_string = TranslatedString(
+        resource_pk=resource_pk, base_string=base_string, translation='', comment=comment,
+        translator_comment='', context=context
+    )
+    engine.session.add(translated_string)
     engine.session.flush()
+    return translated_string.id
 
 
 def get_translated_strings(language_code, resource_pk):

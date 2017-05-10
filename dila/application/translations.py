@@ -16,18 +16,23 @@ def get_po_file(language_code, resource_pk):
     return str(po)
 
 
-def upload_translated_po_file(resource_pk, content):
+def upload_po_file(resource_pk, content, translated_language_code=None):
     po = polib.pofile(content)
     for entry in po:
         if not entry.obsolete:
-            data.add_translated_string(
+            string_pk = data.add_translated_string(
                 resource_pk,
                 entry.msgid,
                 context=entry.msgctxt,
-                translation=entry.msgstr,
                 comment=entry.comment,
-                translator_comment=entry.tcomment,
             )
+            if translated_language_code:
+                data.set_translated_string(
+                    translated_language_code,
+                    string_pk,
+                    translation=entry.msgstr,
+                    translator_comment=entry.tcomment
+                )
 
 
 def get_translated_strings(language_code, resource_pk):
