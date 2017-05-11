@@ -4,6 +4,7 @@ import wtforms
 
 class PoFileUpload(flask_wtf.FlaskForm):
     po_file = wtforms.FileField('Select po file')
+    apply_translations = wtforms.BooleanField('Apply translations')
 
 
 class TranslationForm(flask_wtf.FlaskForm):

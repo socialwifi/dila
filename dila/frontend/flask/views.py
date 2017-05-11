@@ -93,9 +93,13 @@ class ResourceView(views.MethodView):
     def post(self):
         if self.language_code and self.form.validate():
             po_content = flask.request.files[self.form.po_file.name].read().decode()
-            application.upload_po_file(self.resource_pk, po_content, translated_language_code=self.language_code)
+            if self.form.data['apply_translations']:
+                application.upload_po_file(self.resource_pk, po_content, translated_language_code=self.language_code)
+            else:
+                application.upload_po_file(self.resource_pk, po_content)
             flask.flash('File uploaded')
-            return flask.redirect(flask.url_for('main.resource', resource_pk=self.resource_pk))
+            return flask.redirect(
+                flask.url_for('main.resource', language_code=self.language_code, resource_pk=self.resource_pk))
         else:
             return self.get()
 
