@@ -106,7 +106,7 @@ def select_language(selenium, name):
 
 def assert_language_selected(selenium, name):
     content = selenium.find_element_by_tag_name('body').text
-    assert 'Current language: {}.'.format(name) in content
+    assert 'Language: {}.'.format(name) in content
 
 
 def go_homepage(selenium):

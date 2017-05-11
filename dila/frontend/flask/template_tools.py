@@ -20,4 +20,5 @@ def setup_app(app):
             'languages_form': languages.get_new_form(),
             'languages_links': list(languages.get_language_links()),
             'current_language_code': languages.current_language_code(),
+            'current_language': languages.current_language(),
         }

@@ -17,6 +17,7 @@ msgstr "Żółć"
 
 @mock.patch('dila.application.get_resources')
 @mock.patch('dila.application.get_languages', mock.MagicMock())
+@mock.patch('dila.application.get_language', mock.MagicMock())
 def test_home(get_resources, flask_client):
     get_resources.return_value = []
     response = flask_client.get('/')
@@ -29,6 +30,7 @@ def test_home(get_resources, flask_client):
 
 @mock.patch('dila.application.get_resources')
 @mock.patch('dila.application.get_languages')
+@mock.patch('dila.application.get_language', mock.MagicMock())
 def test_home_with_selected_language_links_to_resource_page(get_languages, get_resources, flask_client):
     get_resources.return_value = []
     get_languages.return_value = [
@@ -42,8 +44,32 @@ def test_home_with_selected_language_links_to_resource_page(get_languages, get_r
                      response.data.decode())
 
 
+@mock.patch('dila.application.get_resources')
+@mock.patch('dila.application.get_languages')
+def test_home_prompts_to_select_language(get_languages, get_resources, flask_client):
+    get_resources.return_value = []
+    get_languages.return_value = [structures.Language('dutch', 'nl')]
+    response = flask_client.get('/')
+    assert 'Select language.' in response.data.decode()
+
+
+
+@mock.patch('dila.application.get_resources')
+@mock.patch('dila.application.get_languages')
+@mock.patch('dila.application.get_language')
+def test_home_shows_selected_language(get_language, get_languages, get_resources, flask_client):
+    get_resources.return_value = []
+    get_languages.return_value = [
+        structures.Language('dutch', 'nl'),
+    ]
+    get_language.return_value = structures.Language('dutch', 'nl')
+    response = flask_client.get('/lang/nl/')
+    assert 'Language: dutch.' in response.data.decode()
+
+
 @mock.patch('dila.application.get_resources', mock.MagicMock())
 @mock.patch('dila.application.get_languages', mock.MagicMock())
+@mock.patch('dila.application.get_language', mock.MagicMock())
 def test_add_resource_form_visible(flask_client):
     response = flask_client.get('/')
     assert re.search('<input class="[^"]*" id="new_resource_name" name="new_resource_name" type="text" value="">',
@@ -53,6 +79,7 @@ def test_add_resource_form_visible(flask_client):
 
 @mock.patch('dila.application.get_resources', mock.MagicMock())
 @mock.patch('dila.application.get_languages', mock.MagicMock())
+@mock.patch('dila.application.get_language', mock.MagicMock())
 def test_add_language_form_visible(flask_client):
     response = flask_client.get('/')
     assert re.search('<input class="[^"]*" id="new_language_name" name="new_language_name" type="text" value="">',
@@ -64,6 +91,7 @@ def test_add_language_form_visible(flask_client):
 
 @mock.patch('dila.application.get_resources')
 @mock.patch('dila.application.get_languages', mock.MagicMock())
+@mock.patch('dila.application.get_language', mock.MagicMock())
 def test_links_to_resource_page(get_resources, flask_client):
     get_resources.return_value = [
         structures.Resource(
@@ -76,6 +104,7 @@ def test_links_to_resource_page(get_resources, flask_client):
 
 @mock.patch('dila.application.get_resources')
 @mock.patch('dila.application.get_languages')
+@mock.patch('dila.application.get_language', mock.MagicMock())
 def test_home_with_selected_language_links_to_resource_page(get_languages, get_resources, flask_client):
     get_languages.return_value = [
         structures.Language('polish', 'pl'),
@@ -92,6 +121,7 @@ def test_home_with_selected_language_links_to_resource_page(get_languages, get_r
 
 @mock.patch('dila.application.get_resources', mock.MagicMock())
 @mock.patch('dila.application.get_languages', mock.MagicMock())
+@mock.patch('dila.application.get_language', mock.MagicMock())
 @mock.patch('dila.application.add_resource')
 def test_add_resource(add_resource, flask_client):
     response = flask_client.post(
@@ -107,6 +137,7 @@ def test_add_resource(add_resource, flask_client):
 
 
 @mock.patch('dila.application.get_resources', mock.MagicMock())
+@mock.patch('dila.application.get_language', mock.MagicMock())
 @mock.patch('dila.application.get_languages')
 def test_home_links_to_language(get_languages, flask_client):
     get_languages.return_value = [
@@ -117,6 +148,7 @@ def test_home_links_to_language(get_languages, flask_client):
 
 
 @mock.patch('dila.application.get_resources', mock.MagicMock())
+@mock.patch('dila.application.get_language', mock.MagicMock())
 @mock.patch('dila.application.get_languages')
 def test_home_with_selected_language_links_to_language(get_languages, flask_client):
     get_languages.return_value = [
@@ -129,6 +161,7 @@ def test_home_with_selected_language_links_to_language(get_languages, flask_clie
 
 @mock.patch('dila.application.get_resources', mock.MagicMock())
 @mock.patch('dila.application.get_languages', mock.MagicMock())
+@mock.patch('dila.application.get_language', mock.MagicMock())
 @mock.patch('dila.application.add_language')
 def test_add_language(add_language, flask_client):
     response = flask_client.post(
@@ -146,6 +179,7 @@ def test_add_language(add_language, flask_client):
 
 
 @mock.patch('dila.application.get_languages', mock.MagicMock())
+@mock.patch('dila.application.get_language', mock.MagicMock())
 def test_resource_page(flask_client):
     response = flask_client.get('/res/1/')
     assert re.search('<li class="">\s*<a class="navbar-brand" href="/">\s*Select resource\s*</a>\s*</li>',
@@ -154,6 +188,7 @@ def test_resource_page(flask_client):
 
 @mock.patch('dila.application.get_translated_strings')
 @mock.patch('dila.application.get_languages', mock.MagicMock())
+@mock.patch('dila.application.get_language', mock.MagicMock())
 def test_resource_page_with_selected_language(get_translated_strings, flask_client):
     response = flask_client.get('/lang/pl/res/1/')
     assert re.search('<li class="">\s*<a class="navbar-brand" href="/lang/pl/">\s*Select resource\s*</a>\s*</li>',
@@ -162,6 +197,7 @@ def test_resource_page_with_selected_language(get_translated_strings, flask_clie
 
 
 @mock.patch('dila.application.get_resources', mock.MagicMock())
+@mock.patch('dila.application.get_language', mock.MagicMock())
 @mock.patch('dila.application.get_languages')
 def test_resource_page_links_to_language(get_languages, flask_client):
     get_languages.return_value = [
@@ -172,6 +208,7 @@ def test_resource_page_links_to_language(get_languages, flask_client):
 
 
 @mock.patch('dila.application.get_translated_strings', mock.MagicMock())
+@mock.patch('dila.application.get_language', mock.MagicMock())
 @mock.patch('dila.application.get_languages')
 def test_resource_page_with_selected_language_links_to_language(get_languages, flask_client):
     get_languages.return_value = [
@@ -183,6 +220,7 @@ def test_resource_page_with_selected_language_links_to_language(get_languages, f
 
 
 @mock.patch('dila.application.get_resources', mock.MagicMock())
+@mock.patch('dila.application.get_language', mock.MagicMock())
 @mock.patch('dila.application.get_languages')
 def test_resource_page_ensures_language_is_selected(get_languages, flask_client):
     get_languages.return_value = [
@@ -195,6 +233,7 @@ def test_resource_page_ensures_language_is_selected(get_languages, flask_client)
 @mock.patch('dila.application.get_translated_strings', mock.MagicMock())
 @mock.patch('dila.application.upload_po_file', mock.MagicMock())
 @mock.patch('dila.application.get_languages', mock.MagicMock())
+@mock.patch('dila.application.get_language', mock.MagicMock())
 def test_upload_po_file_form_visible(flask_client):
     response = flask_client.get('/lang/pl/res/1/')
     assert '<input id="po_file" name="po_file" type="file">' in response.data.decode()
@@ -202,6 +241,7 @@ def test_upload_po_file_form_visible(flask_client):
 @mock.patch('dila.application.get_translated_strings', mock.MagicMock())
 @mock.patch('dila.application.upload_po_file', mock.MagicMock())
 @mock.patch('dila.application.get_languages', mock.MagicMock())
+@mock.patch('dila.application.get_language', mock.MagicMock())
 def test_download_po_file_visible(flask_client):
     response = flask_client.get('/lang/pl/res/1/')
     assert re.search('<a class="[^"]*" href="/lang/pl/res/1/po-file/">\s*Download po\s*</a>', response.data.decode())
@@ -210,6 +250,7 @@ def test_download_po_file_visible(flask_client):
 @mock.patch('dila.application.get_translated_strings', mock.MagicMock())
 @mock.patch('dila.application.upload_po_file')
 @mock.patch('dila.application.get_languages', mock.MagicMock())
+@mock.patch('dila.application.get_language', mock.MagicMock())
 def test_upload_po_file(upload_po_file, flask_client):
     response = flask_client.post(
         '/lang/pl/res/1/',
@@ -225,6 +266,7 @@ def test_upload_po_file(upload_po_file, flask_client):
 
 @mock.patch('dila.application.get_translated_strings')
 @mock.patch('dila.application.get_languages', mock.MagicMock())
+@mock.patch('dila.application.get_language', mock.MagicMock())
 def test_links_to_stored_translation_page(get_translated_strings, flask_client):
     get_translated_strings.return_value = [
         structures.TranslatedStringData(
@@ -242,6 +284,7 @@ def test_links_to_stored_translation_page(get_translated_strings, flask_client):
 
 @mock.patch('dila.application.get_translated_string')
 @mock.patch('dila.application.get_languages', mock.MagicMock())
+@mock.patch('dila.application.get_language', mock.MagicMock())
 def test_get_translation_form(get_translated_string, flask_client):
     get_translated_string.return_value = structures.TranslatedStringData(
         '34',
@@ -262,6 +305,7 @@ def test_get_translation_form(get_translated_string, flask_client):
 @mock.patch('dila.application.get_translated_string')
 @mock.patch('dila.application.set_translated_string')
 @mock.patch('dila.application.get_languages', mock.MagicMock())
+@mock.patch('dila.application.get_language', mock.MagicMock())
 def test_post_translation_form(set_translated_string, get_translated_string, flask_client):
     get_translated_string.return_value = structures.TranslatedStringData(
         '34',
@@ -282,6 +326,7 @@ def test_post_translation_form(set_translated_string, get_translated_string, fla
 
 @mock.patch('dila.application.get_po_file')
 @mock.patch('dila.application.get_languages', mock.MagicMock())
+@mock.patch('dila.application.get_language', mock.MagicMock())
 def test_get_po_file_view(get_po_file, flask_client):
     get_po_file.return_value = 'asdf'
     response = flask_client.get('/lang/pl/res/1/po-file/')

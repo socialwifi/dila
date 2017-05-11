@@ -16,3 +16,11 @@ def get_language_links():
 
 def current_language_code():
     return (flask.request.view_args or {}).get('language_code')
+
+
+def current_language():
+    code = current_language_code()
+    if code:
+        return application.get_language(code).name
+    else:
+        return None
