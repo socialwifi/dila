@@ -1,11 +1,11 @@
 Changelog for dila
 =================
 
-0.1.4 (unreleased)
+0.2.0 (unreleased)
 ------------------
 
-- Nothing changed yet.
-
+- Recreated translations tables in db. Backup your data before migration.
+- Added multiple languages support.
 
 0.1.3 (2017-05-05)
 ------------------
