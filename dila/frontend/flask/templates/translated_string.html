@@ -5,7 +5,7 @@
       enctype=multipart/form-data>
     <table class="table-striped">
         <tr><td>Base string</td><td>{{ translated_string.base_string }}</td></tr>
-        <tr><td>Translation</td><td>{{ form.translation }}</td></tr>
+        <tr><td>Translation</td><td>{{ form.translation(class_="form-control") }}</td></tr>
         <tr><td>Comment</td><td>{{ translated_string.comment }}</td></tr>
         <tr><td>Translator Comment</td><td>{{ translated_string.translator_comment }}</td></tr>
         <tr><td>Context</td><td>{{ translated_string.context }}</td></tr>

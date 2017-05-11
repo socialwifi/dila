@@ -11,7 +11,9 @@
                 <div class="modal-body">
                     <form method="POST" action="{{ url_for('main.resource', language_code=current_language_code, resource_pk=resource_pk) }}" enctype=multipart/form-data>
                         {{ form.csrf_token }}
-                        {{ form.po_file.label }} {{ form.po_file }}
+                        <div class="form-group">
+                            {{ form.po_file.label }} {{ form.po_file }}
+                        </div>
                         <input class="btn btn-default btn-sm" type="submit" value="Upload" id="upload_po_file">
                     </form>
                 </div>

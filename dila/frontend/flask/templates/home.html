@@ -14,7 +14,9 @@
             <div class="modal-body">
                 <form method="POST" action="{{ url_for('main.home') }}" enctype=multipart/form-data>
                     {{ form.csrf_token }}
-                    {{ form.new_resource_name.label }} {{ form.new_resource_name }}
+                    <div class="form-group">
+                        {{ form.new_resource_name.label }} {{ form.new_resource_name(class_="form-control") }}
+                    </div>
                     <input id="add_new_resource" value="Add" type="submit">
                 </form>
             </div>
