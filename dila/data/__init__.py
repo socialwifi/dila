@@ -1,4 +1,4 @@
-from dila.data.translated_strings import add_translated_string
+from dila.data.base_strings import add_translated_string
 from dila.data.translated_strings import get_translated_string
 from dila.data.translated_strings import get_translated_strings
 from dila.data.translated_strings import set_translated_string
