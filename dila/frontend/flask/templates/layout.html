@@ -40,12 +40,14 @@
                     {% endif %}
                 </a>
                 <div class="dropdown-menu">
-                    <button id="addLanguageButton" type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#addLanguage">
-                        Add language
-                    </button>
-                    {% for name, link in languages_links %}
-                        <a href="{{ link }}">{{ name }}</a>
-                    {% endfor %}
+                    <div class="list-group">
+                        {% for name, link in languages_links %}
+                            <a class="list-group-item" href="{{ link }}">{{ name }}</a>
+                        {% endfor %}
+                        <button id="addLanguageButton" class="btn btn-info btn-lg center-block" data-toggle="modal" data-target="#addLanguage">
+                            Add language
+                        </button>
+                    </div>
                 </div>
             </li>
           </ul>
