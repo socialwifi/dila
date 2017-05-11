@@ -29,14 +29,15 @@ def test_first(selenium: selenium.webdriver.Remote, running_server_url):
     add_resource(selenium, 'second resource')
     time.sleep(1)
     select_resource(selenium, 'first resource')
+    time.sleep(1)
     assert_no_language_info(selenium)
     add_language(selenium, 'dutch', 'nl')
     time.sleep(1)
     add_language(selenium, 'polish', 'pl')
     time.sleep(1)
     assert_language_selected(selenium, 'polish')
-    pytest.fail()
     select_language(selenium, 'dutch')
+    time.sleep(1)
     assert_language_selected(selenium, 'dutch')
     upload_po(selenium, 'test.po', with_translations=True)
     time.sleep(1)
@@ -46,7 +47,9 @@ def test_first(selenium: selenium.webdriver.Remote, running_server_url):
     time.sleep(1)
     assert_new_translation_displayed(selenium)
     upload_po(selenium, 'new_untranslated.po')
+    time.sleep(1)
     assert_changed_translation_strings(selenium)
+    pytest.fail()
     assert_download_link_works(selenium)
     go_homepage(selenium)
     select_resource(selenium, 'second resource')
@@ -101,6 +104,7 @@ def add_language(selenium, name, short):
 
 
 def select_language(selenium, name):
+    selenium.find_element_by_id('languageMenuButton').click()
     selenium.find_element_by_link_text(name).click()
 
 
@@ -114,6 +118,8 @@ def go_homepage(selenium):
 
 
 def upload_po(selenium, filename, with_translations=False):
+    selenium.find_element_by_id('uploadPoFileButton').click()
+    time.sleep(1)
     file_upload = selenium.find_element_by_id('po_file')
     file_upload.clear()
     file_upload.send_keys(str(pathlib.Path(__file__).parent.parent / filename))
