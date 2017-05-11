@@ -144,7 +144,7 @@ def test_home_links_to_language(get_languages, flask_client):
         structures.Language('polish', 'pl')
     ]
     response = flask_client.get('/')
-    assert re.search('<a href="/lang/pl/">\s*polish\s*</a>', response.data.decode())
+    assert re.search('<a class="[^"]*" href="/lang/pl/">\s*polish\s*</a>', response.data.decode())
 
 
 @mock.patch('dila.application.get_resources', mock.MagicMock())
@@ -156,7 +156,7 @@ def test_home_with_selected_language_links_to_language(get_languages, flask_clie
         structures.Language('dutch', 'nl'),
     ]
     response = flask_client.get('/lang/pl/')
-    assert re.search('<a href="/lang/nl/">\s*dutch\s*</a>', response.data.decode())
+    assert re.search('<a class="[^"]*" href="/lang/nl/">\s*dutch\s*</a>', response.data.decode())
 
 
 @mock.patch('dila.application.get_resources', mock.MagicMock())
@@ -173,6 +173,7 @@ def test_add_language(add_language, flask_client):
         }
     )
     assert response.status_code == 302
+    assert response.location == 'http://localhost/lang/pl/'
     response = flask_client.get(response.location)
     assert 'Language added' in response.data.decode()
     add_language.assert_called_with('polish', 'pl')
@@ -204,7 +205,7 @@ def test_resource_page_links_to_language(get_languages, flask_client):
         structures.Language('polish', 'pl')
     ]
     response = flask_client.get('/res/1/')
-    assert re.search('<a href="/lang/pl/res/1/">\s*polish\s*</a>', response.data.decode())
+    assert re.search('<a class="[^"]*" href="/lang/pl/res/1/">\s*polish\s*</a>', response.data.decode())
 
 
 @mock.patch('dila.application.get_translated_strings', mock.MagicMock())
@@ -216,7 +217,7 @@ def test_resource_page_with_selected_language_links_to_language(get_languages, f
         structures.Language('dutch', 'nl'),
     ]
     response = flask_client.get('/lang/pl/res/1/')
-    assert re.search('<a href="/lang/nl/res/1/">\s*dutch\s*</a>', response.data.decode())
+    assert re.search('<a class="[^"]*" href="/lang/nl/res/1/">\s*dutch\s*</a>', response.data.decode())
 
 
 @mock.patch('dila.application.get_resources', mock.MagicMock())

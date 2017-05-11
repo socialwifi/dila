@@ -1,6 +1,7 @@
 import flask
 from cached_property import cached_property
 from flask import views
+import werkzeug.exceptions
 
 from dila import application
 from dila.frontend.flask import forms
@@ -50,10 +51,11 @@ class AddLanguageView(views.MethodView):
 
     def post(self):
         if self.form.validate():
+            new_language_code = self.form.data['new_language_short']
             application.add_language(
-                self.form.data['new_language_name'], self.form.data['new_language_short'])
+                self.form.data['new_language_name'], new_language_code)
             flask.flash('Language added.')
-            return flask.redirect(self.form.data['next'])
+            return flask.redirect(self.try_replace_language_code(self.form.data['next'], new_language_code))
         else:
             flask.flash('Failed to add language.')
             return flask.redirect(self.form.data['next'])
@@ -61,6 +63,16 @@ class AddLanguageView(views.MethodView):
     @cached_property
     def form(self):
         return languages.get_new_form()
+
+    def try_replace_language_code(self, next, new_language_code):
+        url_adapter = flask._request_ctx_stack.top.url_adapter
+        try:
+            endpoint, args = url_adapter.match(next, 'GET')
+        except werkzeug.exceptions.NotFound:
+            return next
+        else:
+            args['language_code'] = new_language_code
+            return flask.url_for(endpoint, **args)
 
 
 blueprint.add_url_rule('/add-language/', view_func=AddLanguageView.as_view('add_language'))
