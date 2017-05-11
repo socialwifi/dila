@@ -101,12 +101,12 @@ def test_get_translated_string(get_resource):
     assert result == 'data_result'
 
 
-@mock.patch('dila.data.add_translated_string')
+@mock.patch('dila.data.add_or_update_base_string')
 @mock.patch('dila.data.set_translated_string')
-def test_upload_po_file_with_translations(set_translated_string, add_translated_string):
-    add_translated_string.return_value = 'string_pk'
+def test_upload_po_file_with_translations(set_translated_string, add_or_update_base_string):
+    add_or_update_base_string.return_value = 'string_pk'
     application.upload_po_file('1', test_po, translated_language_code='pl')
-    assert add_translated_string.mock_calls == [
+    assert add_or_update_base_string.mock_calls == [
         mock.call(
             '1',
             'Yellow',
@@ -122,10 +122,10 @@ def test_upload_po_file_with_translations(set_translated_string, add_translated_
         )]
 
 
-@mock.patch('dila.data.add_translated_string')
-def test_upload_po_file_without_translations(add_translated_string):
+@mock.patch('dila.data.add_or_update_base_string')
+def test_upload_po_file_without_translations(add_or_update_base_string):
     application.upload_po_file('1', test_po)
-    assert add_translated_string.mock_calls == [
+    assert add_or_update_base_string.mock_calls == [
         mock.call(
             '1',
             'Yellow',

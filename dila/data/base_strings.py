@@ -18,6 +18,9 @@ class BaseString(engine.Base):
     base_string = sqlalchemy.Column(sqlalchemy.Text, nullable=False)
     comment = sqlalchemy.Column(sqlalchemy.Text, nullable=False, default='')
     context = sqlalchemy.Column(sqlalchemy.Text, nullable=False, default='')
+    __table_args__ = (
+        sqlalchemy.UniqueConstraint('resource_pk', 'base_string', 'context', name='resource_base_string_context_uc'),
+    )
 
     def as_data(self):
         return structures.TranslatedStringData(
@@ -31,11 +34,17 @@ class BaseString(engine.Base):
         )
 
 
-def add_translated_string(resource_pk, base_string, *, comment, context):
-    translated_string = BaseString(
-        resource_pk=resource_pk, base_string=base_string, comment=comment, context=context
-    )
-    engine.session.add(translated_string)
+def add_or_update_base_string(resource_pk, base_string, *, comment, context):
+    try:
+        base_string = BaseString.query.filter(
+            BaseString.resource_pk == resource_pk,
+            BaseString.base_string == base_string,
+            BaseString.context == context,
+        ).one()
+    except sqlalchemy.orm.exc.NoResultFound:
+        base_string = BaseString(resource_pk=resource_pk, base_string=base_string, comment=comment, context=context)
+        engine.session.add(base_string)
+    else:
+        base_string.comment = comment
     engine.session.flush()
-    return translated_string.id
-
+    return base_string.id

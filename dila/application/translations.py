@@ -20,7 +20,7 @@ def upload_po_file(resource_pk, content, translated_language_code=None):
     po = polib.pofile(content)
     for entry in po:
         if not entry.obsolete:
-            string_pk = data.add_translated_string(
+            string_pk = data.add_or_update_base_string(
                 resource_pk,
                 entry.msgid,
                 context=entry.msgctxt,

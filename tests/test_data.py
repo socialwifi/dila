@@ -36,7 +36,7 @@ def test_listing_languages(db_connection):
 def test_data_preserves_translated_strings(db_connection):
     data.add_language('polish', 'pl')
     resource_pk = data.add_resource('r').pk
-    string_pk = data.add_translated_string(resource_pk, 'x', comment='comment', context='ctx')
+    string_pk = data.add_or_update_base_string(resource_pk, 'x', comment='comment', context='ctx')
     data.set_translated_string('pl', string_pk, translation='y', translator_comment='tcomment')
     preserved_strings = list(data.get_translated_strings('pl', resource_pk))
     assert preserved_strings == [
@@ -51,10 +51,28 @@ def test_data_preserves_translated_strings(db_connection):
         )]
 
 
+def test_adding_the_same_sting(db_connection):
+    data.add_language('polish', 'pl')
+    resource_pk = data.add_resource('r').pk
+    data.add_or_update_base_string(resource_pk, 'x', comment='comment', context='ctx')
+    data.add_or_update_base_string(resource_pk, 'x', comment='lolz', context='ctx')
+    preserved_strings = list(data.get_translated_strings('pl', resource_pk))
+    assert preserved_strings == [
+        dila.application.structures.TranslatedStringData(
+            pk=mock.ANY,
+            base_string='x',
+            context='ctx',
+            translation='',
+            comment='lolz',
+            translator_comment='',
+            resource_pk=resource_pk,
+        )]
+
+
 def test_data_defaults_to_empty_translated_strings(db_connection):
     data.add_language('polish', 'pl')
     resource_pk = data.add_resource('r').pk
-    data.add_translated_string(resource_pk, 'x', comment=None, context=None)
+    data.add_or_update_base_string(resource_pk, 'x', comment=None, context=None)
     preserved_strings = list(data.get_translated_strings('pl', resource_pk))
     assert preserved_strings == [
         dila.application.structures.TranslatedStringData(
@@ -71,7 +89,7 @@ def test_data_defaults_to_empty_translated_strings(db_connection):
 def test_fetching_one_untranslated_string(db_connection):
     data.add_language('polish', 'pl')
     resource_pk = data.add_resource('r').pk
-    string_pk = data.add_translated_string(resource_pk, 'x', comment='comment', context='ctx')
+    string_pk = data.add_or_update_base_string(resource_pk, 'x', comment='comment', context='ctx')
     preserved_string = data.get_translated_string('pl', string_pk)
     assert preserved_string == dila.application.structures.TranslatedStringData(
             pk=string_pk,
@@ -87,7 +105,7 @@ def test_fetching_one_untranslated_string(db_connection):
 def test_fetching_one_translated_string(db_connection):
     data.add_language('polish', 'pl')
     resource_pk = data.add_resource('r').pk
-    string_pk = data.add_translated_string(resource_pk, 'x', comment='comment', context='ctx')
+    string_pk = data.add_or_update_base_string(resource_pk, 'x', comment='comment', context='ctx')
     data.set_translated_string('pl', string_pk, translation='y', translator_comment='tcomment')
     preserved_string = data.get_translated_string('pl', string_pk)
     assert preserved_string == dila.application.structures.TranslatedStringData(
@@ -104,7 +122,7 @@ def test_fetching_one_translated_string(db_connection):
 def test_updating_one_translated_string(db_connection):
     data.add_language('polish', 'pl')
     resource_pk = data.add_resource('r').pk
-    string_pk = data.add_translated_string(
+    string_pk = data.add_or_update_base_string(
         resource_pk, 'x', comment='comment', context='ctx')
     data.set_translated_string('pl', string_pk, translation='y', translator_comment='tcomment')
     data.set_translated_string('pl', string_pk, translation='new')
@@ -124,7 +142,7 @@ def test_translating_string_into_multiple_languages(db_connection):
     data.add_language('polish', 'pl')
     data.add_language('dutch', 'nl')
     resource_pk = data.add_resource('r').pk
-    string_pk = data.add_translated_string(
+    string_pk = data.add_or_update_base_string(
         resource_pk, 'x', comment='comment', context='ctx')
     data.set_translated_string('pl', string_pk, translation='y', translator_comment='ytcomment')
     data.set_translated_string('nl', string_pk, translation='z', translator_comment='ztcomment')
