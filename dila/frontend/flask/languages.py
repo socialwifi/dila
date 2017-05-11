@@ -5,7 +5,7 @@ from dila import application
 
 
 def get_new_form():
-    return forms.NewLanguageForm(obj={'next': flask.request.url})
+    return forms.NewLanguageForm(next=flask.request.path)
 
 
 def get_language_links():
