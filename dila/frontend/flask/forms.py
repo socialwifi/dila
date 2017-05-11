@@ -9,6 +9,7 @@ class PoFileUpload(flask_wtf.FlaskForm):
 
 class TranslationForm(flask_wtf.FlaskForm):
     translation = wtforms.TextAreaField(render_kw={'rows': 5, 'cols': 90})
+    translator_comment = wtforms.TextAreaField(render_kw={'rows': 5, 'cols': 90})
 
 
 class NewResourceForm(flask_wtf.FlaskForm):

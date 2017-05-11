@@ -316,6 +316,8 @@ def test_get_translation_form(get_translated_string, flask_client):
     response = flask_client.get('/lang/pl/edit/34/')
     assert re.search('<textarea class="[^"]*" cols="[^"]*" id="translation" name="translation" rows="[^"]*">'
                      'translation-x</textarea>', response.data.decode())
+    assert re.search('<textarea class="[^"]*" cols="[^"]*" id="translator_comment" name="translator_comment" '
+                     'rows="[^"]*">translator_comment</textarea>', response.data.decode())
     assert 'action="/lang/pl/edit/34/"' in response.data.decode()
 
 
@@ -334,12 +336,16 @@ def test_post_translation_form(set_translated_string, get_translated_string, fla
         'context',
         '1',
     )
-    response = flask_client.post('/lang/pl/edit/34/', data={'translation': 'new-translation'})
+    response = flask_client.post('/lang/pl/edit/34/', data={
+        'translation': 'new-translation',
+        'translator_comment': 'new-translator-comment',
+    })
     assert response.status_code == 302
     assert response.location == 'http://localhost/lang/pl/res/1/'
     response = flask_client.get(response.location)
     assert 'Translation changed' in response.data.decode()
-    set_translated_string.assert_called_with('pl', '34', translation='new-translation')
+    set_translated_string.assert_called_with('pl', '34', translation='new-translation',
+                                             translator_comment='new-translator-comment')
 
 
 @mock.patch('dila.application.get_po_file')

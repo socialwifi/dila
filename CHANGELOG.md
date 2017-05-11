@@ -5,6 +5,7 @@ Changelog for dila
 ------------------
 
 - Ensure strings are sorted.
+- Allow to change translator comment.
 
 
 0.2.0 (2017-05-11)
