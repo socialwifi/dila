@@ -5,7 +5,7 @@ import pytest
 import selenium.webdriver
 import selenium.common.exceptions
 import tenacity
-
+import time
 
 PO_RESULT = '''#
 msgid ""
@@ -29,6 +29,7 @@ def test_first(selenium: selenium.webdriver.Remote, running_server_url):
     add_resource(selenium, 'first resource')
     retry_selenium(add_resource)(selenium, 'second resource')
     retry_selenium(select_resource)(selenium, 'first resource')
+    time.sleep(0.1)
     retry_selenium(assert_no_language_info)(selenium)
     add_language(selenium, 'dutch', 'nl')
     retry_selenium(add_language)(selenium, 'polish', 'pl')
@@ -42,14 +43,13 @@ def test_first(selenium: selenium.webdriver.Remote, running_server_url):
     retry_selenium(assert_new_translation_displayed)(selenium)
     upload_po(selenium, 'new_untranslated.po')
     retry_selenium(assert_changed_translation_strings)(selenium)
-    pytest.fail()
     assert_download_link_works(selenium)
     go_homepage(selenium)
-    select_resource(selenium, 'second resource')
+    retry_selenium(select_resource)(selenium, 'second resource')
     retry_selenium(assert_no_translations_displayed)(selenium)
     go_homepage(selenium)
-    select_resource(selenium, 'first resource')
-    select_language(selenium, 'polish')
+    retry_selenium(select_resource)(selenium, 'first resource')
+    retry_selenium(select_language)(selenium, 'polish')
     retry_selenium(assert_strings_without_translations_displayed)(selenium)
 
 
@@ -60,6 +60,7 @@ retry_selenium = tenacity.retry(
         selenium.common.exceptions.StaleElementReferenceException,
         selenium.common.exceptions.ElementNotVisibleException,
         selenium.common.exceptions.InvalidElementStateException,
+        selenium.common.exceptions.NoSuchElementException,
         AssertionError,
     )),
     reraise=True,
@@ -77,7 +78,10 @@ def assert_no_resources_info(selenium):
 
 
 def add_resource(selenium, name):
-    selenium.find_element_by_id('addResourceButton').click()
+    @retry_selenium
+    def open_add_resource_menu():
+        selenium.find_element_by_id('addResourceButton').click()
+    open_add_resource_menu()
 
     @retry_selenium
     def try_add_resource():
@@ -98,8 +102,11 @@ def assert_no_language_info(selenium):
 
 
 def add_language(selenium, name, short):
-    selenium.find_element_by_id('languageMenuButton').click()
-    selenium.find_element_by_id('addLanguageButton').click()
+    @retry_selenium
+    def open_add_language_menu():
+        selenium.find_element_by_id('languageMenuButton').click()
+        selenium.find_element_by_id('addLanguageButton').click()
+    open_add_language_menu()
 
     @retry_selenium
     def try_add_language():
@@ -128,7 +135,10 @@ def go_homepage(selenium):
 
 
 def upload_po(selenium, filename, with_translations=False):
-    selenium.find_element_by_id('uploadPoFileButton').click()
+    @retry_selenium
+    def open_po_menu():
+        selenium.find_element_by_id('uploadPoFileButton').click()
+    open_po_menu()
 
     @retry_selenium
     def try_upload_po():
@@ -172,10 +182,11 @@ def assert_changed_translation_strings(selenium):
     content = selenium.find_element_by_tag_name('body').text
     assert 'File uploaded' in content
     assert 'Disambiguation for context' in content
-    assert 'Een' in content
+    assert 'New translation' in content
     assert 'Disambiguation for second context' not in content
     assert 'Twee' not in content
     assert 'Disambiguation for third context' in content
+
 
 def assert_download_link_works(selenium):
     download_link = selenium.find_element_by_link_text('Download po')

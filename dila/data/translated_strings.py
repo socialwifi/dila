@@ -4,7 +4,6 @@ from sqlalchemy import orm
 
 from dila.application import structures
 from dila.data import engine, base_strings
-from dila.data import resources
 from dila.data import languages
 
 
@@ -12,8 +11,11 @@ class TranslatedString(engine.Base):
     __tablename__ = 'translated_string'
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)
     base_string_pk = sqlalchemy.Column(
-        postgres_dialect.UUID(as_uuid=True), sqlalchemy.ForeignKey(base_strings.BaseString.id), nullable=False)
-    base_string = orm.relationship(base_strings.BaseString, backref=orm.backref('translated_strings'))
+        postgres_dialect.UUID(as_uuid=True),
+        sqlalchemy.ForeignKey(base_strings.BaseString.id, ondelete='CASCADE'),
+        nullable=False)
+    base_string = orm.relationship(
+        base_strings.BaseString, backref=orm.backref('translated_strings'))
     language_pk = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey(languages.Language.id), nullable=False)
     language = orm.relationship(languages.Language, backref=orm.backref('translated_strings'))
     translation = sqlalchemy.Column(sqlalchemy.Text, nullable=False, default='')

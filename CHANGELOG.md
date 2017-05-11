@@ -7,6 +7,7 @@ Changelog for dila
 - Recreated translations tables in db. Backup your data before migration.
 - Added multiple languages support.
 - Made base string with context unique in resource.
+- Delete old strings when uploading new translations.
 
 0.1.3 (2017-05-05)
 ------------------
