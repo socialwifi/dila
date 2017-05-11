@@ -48,3 +48,10 @@ def add_or_update_base_string(resource_pk, base_string, *, comment, context):
         base_string.comment = comment
     engine.session.flush()
     return base_string.id
+
+
+def delete_old_strings(resource_pk, *, keep_pks):
+    BaseString.query.filter(
+        BaseString.resource_pk == resource_pk,
+        BaseString.id.notin_(keep_pks),
+    ).delete(synchronize_session='fetch')

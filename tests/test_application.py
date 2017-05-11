@@ -101,6 +101,7 @@ def test_get_translated_string(get_resource):
     assert result == 'data_result'
 
 
+@mock.patch('dila.data.delete_old_strings', mock.MagicMock())
 @mock.patch('dila.data.add_or_update_base_string')
 @mock.patch('dila.data.set_translated_string')
 def test_upload_po_file_with_translations(set_translated_string, add_or_update_base_string):
@@ -122,6 +123,7 @@ def test_upload_po_file_with_translations(set_translated_string, add_or_update_b
         )]
 
 
+@mock.patch('dila.data.delete_old_strings', mock.MagicMock())
 @mock.patch('dila.data.add_or_update_base_string')
 def test_upload_po_file_without_translations(add_or_update_base_string):
     application.upload_po_file('1', test_po)
@@ -131,6 +133,18 @@ def test_upload_po_file_without_translations(add_or_update_base_string):
             'Yellow',
             context='Disambiguation for context',
             comment='Programmer comment',
+        )]
+
+
+@mock.patch('dila.data.delete_old_strings')
+@mock.patch('dila.data.add_or_update_base_string')
+def test_uploading_po_removes_old_strings(add_or_update_base_string, delete_old_strings):
+    add_or_update_base_string.return_value = 'string_pk'
+    application.upload_po_file('1', test_po)
+    assert delete_old_strings.mock_calls == [
+        mock.call(
+            '1',
+            keep_pks=['string_pk'],
         )]
 
 

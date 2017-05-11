@@ -166,3 +166,22 @@ def test_translating_string_into_multiple_languages(db_connection):
         translator_comment='ztcomment',
         resource_pk=resource_pk,
     )
+
+
+def test_deleting_old_strings(db_connection):
+    data.add_language('polish', 'pl')
+    resource_pk = data.add_resource('r').pk
+    first_string_pk = data.add_or_update_base_string(resource_pk, 'x', comment='comment', context='ctx')
+    data.add_or_update_base_string(resource_pk, 'y', comment='comment', context='ctx')
+    data.delete_old_strings(resource_pk, keep_pks=[first_string_pk])
+    preserved_strings = list(data.get_translated_strings('pl', resource_pk))
+    assert preserved_strings == [
+        dila.application.structures.TranslatedStringData(
+            pk=mock.ANY,
+            base_string='x',
+            context='ctx',
+            translation='',
+            comment='comment',
+            translator_comment='',
+            resource_pk=resource_pk,
+        )]
