@@ -46,17 +46,20 @@ def test_home_with_selected_language_links_to_resource_page(get_languages, get_r
 @mock.patch('dila.application.get_languages', mock.MagicMock())
 def test_add_resource_form_visible(flask_client):
     response = flask_client.get('/')
-    assert '<input id="new_resource_name" name="new_resource_name" type="text" value="">' in response.data.decode()
-    assert '<input id="add_new_resource" value="Add" type="submit">' in response.data.decode()
+    assert re.search('<input class="[^"]*" id="new_resource_name" name="new_resource_name" type="text" value="">',
+                     response.data.decode())
+    assert re.search('<input id="add_new_resource" value="Add" type="submit">', response.data.decode())
 
 
 @mock.patch('dila.application.get_resources', mock.MagicMock())
 @mock.patch('dila.application.get_languages', mock.MagicMock())
 def test_add_language_form_visible(flask_client):
     response = flask_client.get('/')
-    assert '<input id="new_language_name" name="new_language_name" type="text" value="">' in response.data.decode()
-    assert '<input id="new_language_short" name="new_language_short" type="text" value="">' in response.data.decode()
-    assert '<input id="add_new_language" value="Add" type="submit">' in response.data.decode()
+    assert re.search('<input class="[^"]*" id="new_language_name" name="new_language_name" type="text" value="">',
+                     response.data.decode())
+    assert re.search('<input class="[^"]*" id="new_language_short" name="new_language_short" type="text" value="">',
+                     response.data.decode())
+    assert re.search('<input id="add_new_language" value="Add" type="submit">', response.data.decode())
 
 
 @mock.patch('dila.application.get_resources')
@@ -250,7 +253,7 @@ def test_get_translation_form(get_translated_string, flask_client):
         '1',
     )
     response = flask_client.get('/lang/pl/edit/34/')
-    assert re.search('<input id="translation" name="translation" type="text" value="translation-x">',
+    assert re.search('<input class="[^"]*" id="translation" name="translation" type="text" value="translation-x">',
                      response.data.decode())
     assert 'action="/lang/pl/edit/34/"' in response.data.decode()
 
