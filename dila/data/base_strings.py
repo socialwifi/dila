@@ -39,7 +39,7 @@ def add_or_update_base_string(resource_pk, base_string, *, comment, context):
         base_string = BaseString.query.filter(
             BaseString.resource_pk == resource_pk,
             BaseString.base_string == base_string,
-            BaseString.context == context,
+            BaseString.context == (context or ''),
         ).one()
     except sqlalchemy.orm.exc.NoResultFound:
         base_string = BaseString(resource_pk=resource_pk, base_string=base_string, comment=comment, context=context)

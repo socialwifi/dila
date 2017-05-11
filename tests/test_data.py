@@ -69,6 +69,24 @@ def test_adding_the_same_sting(db_connection):
         )]
 
 
+def test_adding_the_same_sting_without_context(db_connection):
+    data.add_language('polish', 'pl')
+    resource_pk = data.add_resource('r').pk
+    data.add_or_update_base_string(resource_pk, 'x', comment='comment', context=None)
+    data.add_or_update_base_string(resource_pk, 'x', comment='lolz', context=None)
+    preserved_strings = list(data.get_translated_strings('pl', resource_pk))
+    assert preserved_strings == [
+        dila.application.structures.TranslatedStringData(
+            pk=mock.ANY,
+            base_string='x',
+            context='',
+            translation='',
+            comment='lolz',
+            translator_comment='',
+            resource_pk=resource_pk,
+        )]
+
+
 def test_data_defaults_to_empty_translated_strings(db_connection):
     data.add_language('polish', 'pl')
     resource_pk = data.add_resource('r').pk
