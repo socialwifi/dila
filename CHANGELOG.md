@@ -8,6 +8,7 @@ Changelog for dila
 - Added multiple languages support.
 - Made base string with context unique in resource.
 - Delete old strings when uploading new translations.
+- Use textarea for translation form.
 
 0.1.3 (2017-05-05)
 ------------------
