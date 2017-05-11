@@ -39,6 +39,7 @@ class TranslatedString(engine.Base):
 def get_translated_strings(language_code, resource_pk):
     strings = list(
         base_strings.BaseString.query.filter(base_strings.BaseString.resource_pk == resource_pk)
+        .order_by(base_strings.BaseString.base_string)
     )
     base_string_ids = (string.id for string in strings)
     translated_strings = TranslatedString.query.join(TranslatedString.language).filter(

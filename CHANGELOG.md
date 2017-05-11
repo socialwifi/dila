@@ -4,7 +4,7 @@ Changelog for dila
 0.2.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Ensure strings are sorted.
 
 
 0.2.0 (2017-05-11)
