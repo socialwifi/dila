@@ -3,7 +3,9 @@ import urllib.request
 
 import pytest
 import selenium.webdriver
-import time
+import selenium.common.exceptions
+import tenacity
+
 
 PO_RESULT = '''#
 msgid ""
@@ -25,41 +27,43 @@ def test_first(selenium: selenium.webdriver.Remote, running_server_url):
     open_homepage(running_server_url, selenium)
     assert_no_resources_info(selenium)
     add_resource(selenium, 'first resource')
-    time.sleep(1)
-    add_resource(selenium, 'second resource')
-    time.sleep(1)
-    select_resource(selenium, 'first resource')
-    time.sleep(1)
-    assert_no_language_info(selenium)
+    retry_selenium(add_resource)(selenium, 'second resource')
+    retry_selenium(select_resource)(selenium, 'first resource')
+    retry_selenium(assert_no_language_info)(selenium)
     add_language(selenium, 'dutch', 'nl')
-    time.sleep(1)
-    add_language(selenium, 'polish', 'pl')
-    time.sleep(1)
-    assert_language_selected(selenium, 'polish')
+    retry_selenium(add_language)(selenium, 'polish', 'pl')
+    retry_selenium(assert_language_selected)(selenium, 'polish')
     select_language(selenium, 'dutch')
-    time.sleep(1)
-    assert_language_selected(selenium, 'dutch')
+    retry_selenium(assert_language_selected)(selenium, 'dutch')
     upload_po(selenium, 'test.po', with_translations=True)
-    time.sleep(1)
-    assert_translations_displayed(selenium)
+    retry_selenium(assert_translations_displayed)(selenium)
     go_to_translation_editor(selenium)
     edit_translation(selenium)
-    time.sleep(1)
-    assert_new_translation_displayed(selenium)
+    retry_selenium(assert_new_translation_displayed)(selenium)
     upload_po(selenium, 'new_untranslated.po')
-    time.sleep(1)
-    assert_changed_translation_strings(selenium)
+    retry_selenium(assert_changed_translation_strings)(selenium)
     pytest.fail()
     assert_download_link_works(selenium)
     go_homepage(selenium)
     select_resource(selenium, 'second resource')
-    time.sleep(1)
-    assert_no_translations_displayed(selenium)
+    retry_selenium(assert_no_translations_displayed)(selenium)
     go_homepage(selenium)
     select_resource(selenium, 'first resource')
     select_language(selenium, 'polish')
-    time.sleep(1)
-    assert_strings_without_translations_displayed(selenium)
+    retry_selenium(assert_strings_without_translations_displayed)(selenium)
+
+
+retry_selenium = tenacity.retry(
+    stop=tenacity.stop_after_attempt(3),
+    wait=tenacity.wait_exponential(multiplier=0.25),
+    retry=tenacity.retry_if_exception_type((
+        selenium.common.exceptions.StaleElementReferenceException,
+        selenium.common.exceptions.ElementNotVisibleException,
+        selenium.common.exceptions.InvalidElementStateException,
+        AssertionError,
+    )),
+    reraise=True,
+)
 
 
 def open_homepage(running_server_url, selenium):
@@ -74,11 +78,14 @@ def assert_no_resources_info(selenium):
 
 def add_resource(selenium, name):
     selenium.find_element_by_id('addResourceButton').click()
-    time.sleep(1)
-    resource_name = selenium.find_element_by_id('new_resource_name')
-    resource_name.clear()
-    resource_name.send_keys(name)
-    selenium.find_element_by_id('add_new_resource').click()
+
+    @retry_selenium
+    def try_add_resource():
+        resource_name = selenium.find_element_by_id('new_resource_name')
+        resource_name.clear()
+        resource_name.send_keys(name)
+        selenium.find_element_by_id('add_new_resource').click()
+    try_add_resource()
 
 
 def select_resource(selenium, name):
@@ -93,14 +100,17 @@ def assert_no_language_info(selenium):
 def add_language(selenium, name, short):
     selenium.find_element_by_id('languageMenuButton').click()
     selenium.find_element_by_id('addLanguageButton').click()
-    time.sleep(1)
-    resource_name = selenium.find_element_by_id('new_language_name')
-    resource_name.clear()
-    resource_name.send_keys(name)
-    language_short = selenium.find_element_by_id('new_language_short')
-    language_short.clear()
-    language_short.send_keys(short)
-    selenium.find_element_by_id('add_new_language').click()
+
+    @retry_selenium
+    def try_add_language():
+        resource_name = selenium.find_element_by_id('new_language_name')
+        resource_name.clear()
+        resource_name.send_keys(name)
+        language_short = selenium.find_element_by_id('new_language_short')
+        language_short.clear()
+        language_short.send_keys(short)
+        selenium.find_element_by_id('add_new_language').click()
+    try_add_language()
 
 
 def select_language(selenium, name):
@@ -119,13 +129,16 @@ def go_homepage(selenium):
 
 def upload_po(selenium, filename, with_translations=False):
     selenium.find_element_by_id('uploadPoFileButton').click()
-    time.sleep(1)
-    file_upload = selenium.find_element_by_id('po_file')
-    file_upload.clear()
-    file_upload.send_keys(str(pathlib.Path(__file__).parent.parent / filename))
-    if with_translations:
-        selenium.find_element_by_id('apply_translations').click()
-    selenium.find_element_by_id('upload_po_file').click()
+
+    @retry_selenium
+    def try_upload_po():
+        file_upload = selenium.find_element_by_id('po_file')
+        file_upload.clear()
+        file_upload.send_keys(str(pathlib.Path(__file__).parent.parent / filename))
+        if with_translations:
+            selenium.find_element_by_id('apply_translations').click()
+        selenium.find_element_by_id('upload_po_file').click()
+    try_upload_po()
 
 
 def assert_translations_displayed(selenium):
