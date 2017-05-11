@@ -1,7 +1,7 @@
 Changelog for dila
 =================
 
-0.2.0 (unreleased)
+0.2.0 (2017-05-11)
 ------------------
 
 - Recreated translations tables in db. Backup your data before migration.
