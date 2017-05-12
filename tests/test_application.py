@@ -17,6 +17,18 @@ msgid "Yellow"
 msgstr "Żółć"
 '''
 
+test_plural_po = '''
+#. Programmer comment
+#: location.c:120
+#, python-format
+msgid "%d option"
+msgid_plural "%d options"
+msgstr[0] "%d opcję"
+msgstr[1] "%d opcje"
+msgstr[2] "%d opcji"
+msgstr[3] "%d opcji"
+'''
+
 test_result_po = '''#
 msgid ""
 msgstr ""
@@ -120,6 +132,34 @@ def test_upload_po_file_with_translations(set_translated_string, add_or_update_b
             'string_pk',
             translation='Żółć',
             translator_comment='',
+        )]
+
+
+@mock.patch('dila.data.delete_old_strings', mock.MagicMock())
+@mock.patch('dila.data.add_or_update_base_string')
+@mock.patch('dila.data.set_translated_string')
+def test_upload_po_file_with_plural_translations(set_translated_string, add_or_update_base_string):
+    add_or_update_base_string.return_value = 'string_pk'
+    application.upload_po_file('1', test_plural_po, translated_language_code='pl')
+    assert add_or_update_base_string.mock_calls == [
+        mock.call(
+            '1',
+            '%d option',
+            plural='%d options',
+            context=None,
+            comment='Programmer comment',
+        )]
+    assert set_translated_string.mock_calls == [
+        mock.call(
+            'pl',
+            'string_pk',
+            translation='%d opcję',
+            translator_comment='',
+            plural_translations=structures.PluralTranslations(
+                few='%d opcje',
+                many='%d opcji',
+                other='%d opcji',
+            )
         )]
 
 
