@@ -33,11 +33,11 @@ class BaseString(engine.Base):
             translator_comment='',
             context=self.context,
             resource_pk=self.resource_pk,
-            plural_translations=self.empty_plural_translations,
+            plural_translations=self.empty_plural_translations_data,
         )
 
     @property
-    def empty_plural_translations(self):
+    def empty_plural_translations_data(self):
         if self.plural:
             return structures.PluralTranslations(few='', many='', other='')
         else:

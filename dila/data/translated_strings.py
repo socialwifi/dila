@@ -35,7 +35,32 @@ class TranslatedString(engine.Base):
             translator_comment=self.translator_comment,
             context=base_data.context,
             resource_pk=base_data.resource_pk,
-            plural_translations=base_data.plural_translations,
+            plural_translations=self.plural_translations_data,
+        )
+
+    @property
+    def plural_translations_data(self):
+        if self.plural_translated_strings:
+            return self.plural_translated_strings.as_data()
+        else:
+            return self.base_string.empty_plural_translations_data
+
+
+class PluralTranslatedString(engine.Base):
+    __tablename__ = 'plural_translated_string'
+    id = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey(TranslatedString.id, ondelete='CASCADE'),
+                           primary_key=True)
+    translated_string = orm.relationship(
+        TranslatedString, backref=orm.backref('plural_translated_strings', uselist=False))
+    few = sqlalchemy.Column(sqlalchemy.Text, nullable=False, default='')
+    many = sqlalchemy.Column(sqlalchemy.Text, nullable=False, default='')
+    other = sqlalchemy.Column(sqlalchemy.Text, nullable=False, default='')
+
+    def as_data(self):
+        return structures.PluralTranslations(
+            few=self.few,
+            many=self.many,
+            other=self.other,
         )
 
 
@@ -61,18 +86,23 @@ def get_translated_string(language_code, pk):
         return base_strings.BaseString.query.filter_by(id=pk).one().as_data()
 
 
-def set_translated_string(language_code, pk, **kwargs):
+def set_translated_string(language_code, pk, *, plural_translations=None,  **kwargs):
     language = languages.Language.query.filter_by(code=language_code).one()
     try:
-        existing = TranslatedString.query.filter(
+        translated_string = TranslatedString.query.filter(
             TranslatedString.base_string_pk == pk,
             TranslatedString.language == language
         ).one()
     except sqlalchemy.orm.exc.NoResultFound:
-        engine.session.add(TranslatedString(
-            base_string_pk=pk, language=language, **kwargs
-        ))
+        translated_string = TranslatedString(base_string_pk=pk, language=language, **kwargs)
+        engine.session.add(translated_string)
     else:
         for key, value in kwargs.items():
-            setattr(existing, key, value)
+            setattr(translated_string, key, value)
+    if plural_translations:
+        translated_string.plural_translated_strings = PluralTranslatedString(
+            few=plural_translations.few,
+            many=plural_translations.many,
+            other=plural_translations.other,
+        )
     engine.session.flush()
