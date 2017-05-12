@@ -7,15 +7,33 @@ from dila.application import po_entry_savers
 def get_po_file(language_code, resource_pk):
     po = polib.POFile()
     for string in data.get_translated_strings(language_code, resource_pk):
-        po.append(polib.POEntry(
+        po.append(build_po_entry(string))
+    return str(po)
+
+
+def build_po_entry(string):
+    if string.plural:
+        return polib.POEntry(
+            msgid=string.base_string,
+            msgid_plural=string.plural,
+            msgstr_plural={
+                '0': string.translation,
+                '1': string.plural_translations.few,
+                '2': string.plural_translations.many,
+                '3': string.plural_translations.other,
+            },
+            msgctxt=string.context,
+            comment=string.comment,
+            tcomment=string.translator_comment,
+        )
+    else:
+        return polib.POEntry(
             msgid=string.base_string,
             msgstr=string.translation,
             msgctxt=string.context,
             comment=string.comment,
             tcomment=string.translator_comment,
-        ))
-    return str(po)
-
+        )
 
 def upload_po_file(resource_pk, content, translated_language_code=None):
     po = polib.pofile(content)

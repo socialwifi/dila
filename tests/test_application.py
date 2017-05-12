@@ -40,6 +40,20 @@ msgid "Yellow"
 msgstr "Żółć"
 '''
 
+test_result_plural_po = '''#
+msgid ""
+msgstr ""
+
+#. Programmer comment
+msgctxt ""
+msgid "%d option"
+msgid_plural "%d options"
+msgstr[0] "%d opcję"
+msgstr[1] "%d opcje"
+msgstr[2] "%d opcji"
+msgstr[3] "%d opcji"
+'''
+
 
 @mock.patch('dila.data.add_resource')
 def test_add_resource(add_resource):
@@ -227,3 +241,26 @@ def test_get_po_file(get_translated_strings):
     ]
     result = application.get_po_file('pl', '1')
     assert result == test_result_po
+
+
+@mock.patch('dila.data.get_translated_strings')
+def test_get_po_file_with_plural_translations(get_translated_strings):
+    get_translated_strings.return_value = [
+        structures.TranslatedStringData(
+            pk='34',
+            base_string='%d option',
+            plural='%d options',
+            translation='%d opcję',
+            comment='Programmer comment',
+            translator_comment='',
+            context='',
+            resource_pk='1',
+            plural_translations=structures.PluralTranslations(
+                few='%d opcje',
+                many='%d opcji',
+                other='%d opcji',
+            ),
+        )
+    ]
+    result = application.get_po_file('pl', '1')
+    assert result == test_result_plural_po
