@@ -325,6 +325,39 @@ def test_get_translation_form(get_translated_string, flask_client):
     assert 'action="/lang/pl/edit/34/"' in response.data.decode()
 
 
+@mock.patch('dila.application.get_translated_string')
+@mock.patch('dila.application.get_languages', mock.MagicMock())
+@mock.patch('dila.application.get_language', mock.MagicMock())
+def test_get_plural_translation_form(get_translated_string, flask_client):
+    get_translated_string.return_value = structures.TranslatedStringData(
+        pk='34',
+        base_string='%d option',
+        plural='%d options',
+        translation='%d opcja',
+        comment='comment',
+        translator_comment='translator_comment',
+        context='context',
+        resource_pk='1',
+        plural_translations=structures.PluralTranslations(
+            few='%d opcje',
+            many='%d opcji',
+            other='%d opcji',
+        ),
+    )
+    response = flask_client.get('/lang/pl/edit/34/')
+    assert re.search('<textarea class="[^"]*" cols="[^"]*" id="translation_one" name="translation_one" rows="[^"]*">'
+                     '%d opcja</textarea>', response.data.decode())
+    assert re.search('<textarea class="[^"]*" cols="[^"]*" id="translation_few" name="translation_few" rows="[^"]*">'
+                     '%d opcje</textarea>', response.data.decode())
+    assert re.search('<textarea class="[^"]*" cols="[^"]*" id="translation_many" name="translation_many" rows="[^"]*">'
+                     '%d opcji</textarea>', response.data.decode())
+    assert re.search('<textarea class="[^"]*" cols="[^"]*" id="translation_other" name="translation_other" rows="[^"]*">'
+                     '%d opcji</textarea>', response.data.decode())
+    assert re.search('<textarea class="[^"]*" cols="[^"]*" id="translator_comment" name="translator_comment" '
+                     'rows="[^"]*">translator_comment</textarea>', response.data.decode())
+    assert 'action="/lang/pl/edit/34/"' in response.data.decode()
+
+
 @mock.patch('dila.application.get_translated_strings', mock.MagicMock())
 @mock.patch('dila.application.get_translated_string')
 @mock.patch('dila.application.set_translated_string')
@@ -352,6 +385,46 @@ def test_post_translation_form(set_translated_string, get_translated_string, fla
     assert 'Translation changed' in response.data.decode()
     set_translated_string.assert_called_with('pl', '34', translation='new-translation',
                                              translator_comment='new-translator-comment')
+
+@mock.patch('dila.application.get_translated_strings', mock.MagicMock())
+@mock.patch('dila.application.get_translated_string')
+@mock.patch('dila.application.set_translated_string')
+@mock.patch('dila.application.get_languages', mock.MagicMock())
+@mock.patch('dila.application.get_language', mock.MagicMock())
+def test_post_plural_translation_form(set_translated_string, get_translated_string, flask_client):
+    get_translated_string.return_value = structures.TranslatedStringData(
+        pk='34',
+        base_string='%d option',
+        plural='%d options',
+        translation='%d alternatywa',
+        comment='comment',
+        translator_comment='translator_comment',
+        context='context',
+        resource_pk='1',
+        plural_translations=structures.PluralTranslations(
+            few='%d alternatywy',
+            many='%d alternatyw',
+            other='%d alternatyw',
+        ),
+    )
+    response = flask_client.post('/lang/pl/edit/34/', data={
+        'translation_one': '%d opcja',
+        'translation_few': '%d opcje',
+        'translation_many': '%d opcji',
+        'translation_other': '%d opcji',
+        'translator_comment': 'new-translator-comment',
+    })
+    assert response.status_code == 302
+    assert response.location == 'http://localhost/lang/pl/res/1/'
+    response = flask_client.get(response.location)
+    assert 'Translation changed' in response.data.decode()
+    set_translated_string.assert_called_with('pl', '34', translation='%d opcja',
+                                             translator_comment='new-translator-comment',
+                                             plural_translations=structures.PluralTranslations(
+                                                 few='%d opcje',
+                                                 many='%d opcji',
+                                                 other='%d opcji',
+                                             ))
 
 
 @mock.patch('dila.application.get_po_file')

@@ -5,9 +5,14 @@
       enctype=multipart/form-data>
     <table class="table-striped">
         <tr><td>Base string</td><td>{{ translated_string.base_string }}</td></tr>
+        {% if form.plural %}<tr><td>Plural</td><td>{{ translated_string.plural }}</td></tr>{% endif %}
         <tr><td>Comment</td><td>{{ translated_string.comment }}</td></tr>
         <tr><td>Context</td><td>{{ translated_string.context }}</td></tr>
-        <tr><td>Translation</td><td>{{ form.translation(class_="form-control") }}</td></tr>
+        {% if form.translation %}<tr><td>Translation</td><td>{{ form.translation(class_="form-control") }}</td></tr>{% endif %}
+        {% if form.translation_one %}<tr><td>Translation one</td><td>{{ form.translation_one(class_="form-control") }}</td></tr>{% endif %}
+        {% if form.translation_few %}<tr><td>Translation few</td><td>{{ form.translation_few(class_="form-control") }}</td></tr>{% endif %}
+        {% if form.translation_many %}<tr><td>Translation many</td><td>{{ form.translation_many(class_="form-control") }}</td></tr>{% endif %}
+        {% if form.translation_other %}<tr><td>Translation other</td><td>{{ form.translation_other(class_="form-control") }}</td></tr>{% endif %}
         <tr><td>Translator Comment</td><td>{{ form.translator_comment(class_="form-control") }}</td></tr>
     </table>
     {{ form.csrf_token }}

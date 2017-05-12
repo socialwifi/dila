@@ -136,9 +136,7 @@ class TranslatedStringEditor(views.MethodView):
 
     def post(self):
         if self.form.validate():
-            application.set_translated_string(self.language_code, self.pk,
-                                              translation=self.form.data['translation'],
-                                              translator_comment=self.form.data['translator_comment'])
+            self.form.set_translated_string(self.language_code, self.pk)
             flask.flash('Translation changed')
             return flask.redirect(
                 flask.url_for('main.resource',
@@ -158,7 +156,7 @@ class TranslatedStringEditor(views.MethodView):
 
     @cached_property
     def form(self):
-        return forms.TranslationForm(obj=self.translated_string)
+        return forms.get_translation_form(self.translated_string)
 
     @cached_property
     def translated_string(self):
