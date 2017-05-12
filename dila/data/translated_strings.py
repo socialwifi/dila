@@ -100,9 +100,9 @@ def set_translated_string(language_code, pk, *, plural_translations=None,  **kwa
         for key, value in kwargs.items():
             setattr(translated_string, key, value)
     if plural_translations:
-        translated_string.plural_translated_strings = PluralTranslatedString(
-            few=plural_translations.few,
-            many=plural_translations.many,
-            other=plural_translations.other,
-        )
+        if not translated_string.plural_translated_strings:
+            translated_string.plural_translated_strings = PluralTranslatedString()
+        translated_string.plural_translated_strings.few=plural_translations.few,
+        translated_string.plural_translated_strings.many=plural_translations.many,
+        translated_string.plural_translated_strings.other=plural_translations.other,
     engine.session.flush()

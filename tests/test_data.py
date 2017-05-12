@@ -152,7 +152,7 @@ def test_fetching_one_plural_untranslated_string(db_connection):
         )
 
 
-def test_fetching_one_translated_string(db_connection):
+def test_fetching_one_plural_translated_string(db_connection):
     data.add_language('polish', 'pl')
     resource_pk = data.add_resource('r').pk
     string_pk = data.add_or_update_base_string(resource_pk, 'one x', plural='%d xs', comment='comment', context='ctx')
@@ -181,7 +181,7 @@ def test_fetching_one_translated_string(db_connection):
     )
 
 
-def test_fetching_one_plural_translated_string(db_connection):
+def test_fetching_one_translated_string(db_connection):
     data.add_language('polish', 'pl')
     resource_pk = data.add_resource('r').pk
     string_pk = data.add_or_update_base_string(resource_pk, 'x', comment='comment', context='ctx')
@@ -218,6 +218,41 @@ def test_updating_one_translated_string(db_connection):
         translator_comment='tcomment',
         resource_pk=resource_pk,
         plural_translations=None,
+    )
+
+
+def test_updating_one_plural_translated_string(db_connection):
+    data.add_language('polish', 'pl')
+    resource_pk = data.add_resource('r').pk
+    string_pk = data.add_or_update_base_string(resource_pk, 'one x', plural='%d xs', comment='comment', context='ctx')
+    data.set_translated_string('pl', string_pk, translation='jeden x', translator_comment='tcomment',
+                               plural_translations=dila.application.structures.PluralTranslations(
+                                   few='%d x',
+                                   many='%d x',
+                                   other='%d x',
+                               ))
+    data.set_translated_string('pl', string_pk, translation='jeden iks', translator_comment='tcomment',
+                               plural_translations=dila.application.structures.PluralTranslations(
+                                   few='%d iksy',
+                                   many='%d iksów',
+                                   other='%d iksów',
+                               ))
+    preserved_string = data.get_translated_string('pl', string_pk)
+    data.shutdown_session()
+    assert preserved_string == dila.application.structures.TranslatedStringData(
+        pk=string_pk,
+        base_string='one x',
+        plural='%d xs',
+        context='ctx',
+        translation='jeden iks',
+        comment='comment',
+        translator_comment='tcomment',
+        resource_pk=resource_pk,
+        plural_translations=dila.application.structures.PluralTranslations(
+            few='%d iksy',
+            many='%d iksów',
+            other='%d iksów',
+        ),
     )
 
 
