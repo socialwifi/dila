@@ -1,3 +1,3 @@
 SECRET_KEY = 'secret'
 DEBUG = True
-DATABASE_URL = 'postgresql://postgres:postgres@db/postgres'
+DATABASE_URL = 'postgresql://dila:dila@db/dila'

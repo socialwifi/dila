@@ -8,3 +8,6 @@ dila:
    - ../dila:/package/dila
 db:
   image: postgres:9.6.2
+  environment:
+    POSTGRES_USER: dila
+    POSTGRES_PASSWORD: dila

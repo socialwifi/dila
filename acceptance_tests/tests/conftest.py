@@ -20,7 +20,8 @@ def docker_image():
 @pytest.fixture(scope="session")
 def unmigrated_postgres_server():
     container_name = 'acceptance_test_dila_postgres'
-    sh.docker('run', '-d', '--name', container_name, 'postgres')
+    sh.docker('run', '-d', '-e', 'POSTGRES_USER=dila', '-e', 'POSTGRES_PASSWORD=dila', '--name', container_name,
+              'postgres')
     log = sh.docker('logs', '-f', container_name, _iter=True, _ok_code=2)
     for line in log:
         if 'PostgreSQL init process complete; ready for start up.' in line:
@@ -30,14 +31,16 @@ def unmigrated_postgres_server():
     sh.docker('rm', '-fv', container_name)
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture
 def postgres_server(unmigrated_postgres_server, docker_image):
     sh.docker('run', '--rm', '--link', '{}:db'.format(unmigrated_postgres_server), docker_image,
               'alembic', '-c', 'dila/alembic.ini', 'upgrade', 'head')
     yield unmigrated_postgres_server
+    sh.docker('run', '--rm', '--net', 'container:{}'.format(unmigrated_postgres_server),
+              '-e', 'POSTGRES_USER=dila', '-e', 'POSTGRES_PASSWORD=dila', 'postgres',
+              'psql', '-h', 'localhost', '-U', 'dila', '-c', 'DROP SCHEMA public CASCADE; CREATE SCHEMA public;')
 
-
-@pytest.fixture(scope="session")
+@pytest.fixture
 def running_server(postgres_server, docker_image):
     container_name = 'test_dila'
     sh.docker('run', '-d', '--name', container_name, '--link', '{}:db'.format(postgres_server), docker_image)
@@ -50,12 +53,12 @@ def running_server(postgres_server, docker_image):
     sh.docker('rm', '-fv', container_name)
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture
 def running_server_ip(running_server):
     return get_container_ip(running_server)
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture
 def running_server_url(running_server_ip):
     return 'http://' + running_server_ip + '/'
 
