@@ -1,9 +1,10 @@
 Changelog for dila
 =================
 
-0.2.1 (unreleased)
+0.3.0 (unreleased)
 ------------------
 
+- Handle pluralized strings.
 - Ensure strings are sorted.
 - Allow to change translator comment.
 
