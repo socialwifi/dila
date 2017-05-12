@@ -18,6 +18,7 @@ class BaseString(engine.Base):
     base_string = sqlalchemy.Column(sqlalchemy.Text, nullable=False)
     comment = sqlalchemy.Column(sqlalchemy.Text, nullable=False, default='')
     context = sqlalchemy.Column(sqlalchemy.Text, nullable=False, default='')
+    plural = sqlalchemy.Column(sqlalchemy.Text, nullable=False, default='')
     __table_args__ = (
         sqlalchemy.UniqueConstraint('resource_pk', 'base_string', 'context', name='resource_base_string_context_uc'),
     )
@@ -26,15 +27,24 @@ class BaseString(engine.Base):
         return structures.TranslatedStringData(
             pk=self.id,
             base_string=self.base_string,
+            plural=self.plural,
             translation='',
             comment=self.comment,
             translator_comment='',
             context=self.context,
             resource_pk=self.resource_pk,
+            plural_translations=self.empty_plural_translations,
         )
 
+    @property
+    def empty_plural_translations(self):
+        if self.plural:
+            return structures.PluralTranslations(few='', many='', other='')
+        else:
+            return None
 
-def add_or_update_base_string(resource_pk, base_string, *, comment, context):
+
+def add_or_update_base_string(resource_pk, base_string, *, comment, context, plural=''):
     try:
         base_string = BaseString.query.filter(
             BaseString.resource_pk == resource_pk,
@@ -42,10 +52,12 @@ def add_or_update_base_string(resource_pk, base_string, *, comment, context):
             BaseString.context == (context or ''),
         ).one()
     except sqlalchemy.orm.exc.NoResultFound:
-        base_string = BaseString(resource_pk=resource_pk, base_string=base_string, comment=comment, context=context)
+        base_string = BaseString(resource_pk=resource_pk, base_string=base_string, comment=comment, context=context,
+                                 plural=plural)
         engine.session.add(base_string)
     else:
         base_string.comment = comment
+        base_string.plural = plural
     engine.session.flush()
     return base_string.id
 

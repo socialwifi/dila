@@ -288,13 +288,15 @@ def test_upload_po_file_without_translations(upload_po_file, flask_client):
 def test_links_to_stored_translation_page(get_translated_strings, flask_client):
     get_translated_strings.return_value = [
         structures.TranslatedStringData(
-            '34',
-            'base_string',
-            'translation',
-            'comment',
-            'translator_comment',
-            'context',
-            '1',
+            pk='34',
+            base_string='base_string',
+            plural='',
+            translation='translation',
+            comment='comment',
+            translator_comment='translator_comment',
+            context='context',
+            resource_pk='1',
+            plural_translations=None,
         )
     ]
     response = flask_client.get('/lang/pl/res/1/')
@@ -305,13 +307,15 @@ def test_links_to_stored_translation_page(get_translated_strings, flask_client):
 @mock.patch('dila.application.get_language', mock.MagicMock())
 def test_get_translation_form(get_translated_string, flask_client):
     get_translated_string.return_value = structures.TranslatedStringData(
-        '34',
-        'base_string',
-        'translation-x',
-        'comment',
-        'translator_comment',
-        'context',
-        '1',
+        pk='34',
+        base_string='base_string',
+        plural='',
+        translation='translation-x',
+        comment='comment',
+        translator_comment='translator_comment',
+        context='context',
+        resource_pk='1',
+        plural_translations=None,
     )
     response = flask_client.get('/lang/pl/edit/34/')
     assert re.search('<textarea class="[^"]*" cols="[^"]*" id="translation" name="translation" rows="[^"]*">'
@@ -328,13 +332,15 @@ def test_get_translation_form(get_translated_string, flask_client):
 @mock.patch('dila.application.get_language', mock.MagicMock())
 def test_post_translation_form(set_translated_string, get_translated_string, flask_client):
     get_translated_string.return_value = structures.TranslatedStringData(
-        '34',
-        'base_string',
-        'translation-x',
-        'comment',
-        'translator_comment',
-        'context',
-        '1',
+        pk='34',
+        base_string='base_string',
+        plural='',
+        translation='translation-x',
+        comment='comment',
+        translator_comment='translator_comment',
+        context='context',
+        resource_pk='1',
+        plural_translations=None,
     )
     response = flask_client.post('/lang/pl/edit/34/', data={
         'translation': 'new-translation',

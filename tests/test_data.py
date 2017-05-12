@@ -43,11 +43,13 @@ def test_data_preserves_translated_strings(db_connection):
         dila.application.structures.TranslatedStringData(
             pk=mock.ANY,
             base_string='x',
+            plural='',
             context='ctx',
             translation='y',
             comment='comment',
             translator_comment='tcomment',
             resource_pk=resource_pk,
+            plural_translations=None,
         )]
 
 
@@ -61,11 +63,13 @@ def test_adding_the_same_sting(db_connection):
         dila.application.structures.TranslatedStringData(
             pk=mock.ANY,
             base_string='x',
+            plural='',
             context='ctx',
             translation='',
             comment='lolz',
             translator_comment='',
             resource_pk=resource_pk,
+            plural_translations=None,
         )]
 
 
@@ -79,11 +83,13 @@ def test_adding_the_same_sting_without_context(db_connection):
         dila.application.structures.TranslatedStringData(
             pk=mock.ANY,
             base_string='x',
+            plural='',
             context='',
             translation='',
             comment='lolz',
             translator_comment='',
             resource_pk=resource_pk,
+            plural_translations=None,
         )]
 
 
@@ -96,11 +102,13 @@ def test_data_defaults_to_empty_translated_strings(db_connection):
         dila.application.structures.TranslatedStringData(
             pk=mock.ANY,
             base_string='x',
+            plural='',
             context='',
             translation='',
             comment='',
             translator_comment='',
             resource_pk=resource_pk,
+            plural_translations=None,
         )]
 
 
@@ -112,11 +120,35 @@ def test_fetching_one_untranslated_string(db_connection):
     assert preserved_string == dila.application.structures.TranslatedStringData(
             pk=string_pk,
             base_string='x',
+            plural='',
             context='ctx',
             translation='',
             comment='comment',
             translator_comment='',
             resource_pk=resource_pk,
+            plural_translations=None,
+        )
+
+
+def test_fetching_one_plural_untranslated_string(db_connection):
+    data.add_language('polish', 'pl')
+    resource_pk = data.add_resource('r').pk
+    string_pk = data.add_or_update_base_string(resource_pk, 'one x', plural='%d xs', comment='comment', context='ctx')
+    preserved_string = data.get_translated_string('pl', string_pk)
+    assert preserved_string == dila.application.structures.TranslatedStringData(
+            pk=string_pk,
+            base_string='one x',
+            plural='%d xs',
+            context='ctx',
+            translation='',
+            comment='comment',
+            translator_comment='',
+            resource_pk=resource_pk,
+            plural_translations=dila.application.structures.PluralTranslations(
+                few='',
+                many='',
+                other='',
+            ),
         )
 
 
@@ -129,11 +161,13 @@ def test_fetching_one_translated_string(db_connection):
     assert preserved_string == dila.application.structures.TranslatedStringData(
             pk=string_pk,
             base_string='x',
+            plural='',
             context='ctx',
             translation='y',
             comment='comment',
             translator_comment='tcomment',
             resource_pk=resource_pk,
+            plural_translations=None,
         )
 
 
@@ -148,11 +182,13 @@ def test_updating_one_translated_string(db_connection):
     assert preserved_string == dila.application.structures.TranslatedStringData(
         pk=string_pk,
         base_string='x',
+        plural='',
         context='ctx',
         translation='new',
         comment='comment',
         translator_comment='tcomment',
         resource_pk=resource_pk,
+        plural_translations=None,
     )
 
 
@@ -169,20 +205,24 @@ def test_translating_string_into_multiple_languages(db_connection):
     assert first_string == dila.application.structures.TranslatedStringData(
         pk=string_pk,
         base_string='x',
+        plural='',
         context='ctx',
         translation='y',
         comment='comment',
         translator_comment='ytcomment',
         resource_pk=resource_pk,
+        plural_translations=None,
     )
     assert second_string == dila.application.structures.TranslatedStringData(
         pk=string_pk,
         base_string='x',
+        plural='',
         context='ctx',
         translation='z',
         comment='comment',
         translator_comment='ztcomment',
         resource_pk=resource_pk,
+        plural_translations=None,
     )
 
 
@@ -196,11 +236,13 @@ def test_deleting_old_strings(db_connection):
         dila.application.structures.TranslatedStringData(
             pk=mock.ANY,
             base_string='x',
+            plural='',
             context='ctx',
             translation='',
             comment='comment',
             translator_comment='',
             resource_pk=resource_pk,
+            plural_translations=None,
         )]
 
 
@@ -216,9 +258,11 @@ def test_deleting_old_translated_strings(db_connection):
         dila.application.structures.TranslatedStringData(
             pk=mock.ANY,
             base_string='x',
+            plural='',
             context='ctx',
             translation='',
             comment='comment',
             translator_comment='',
             resource_pk=resource_pk,
+            plural_translations=None,
         )]

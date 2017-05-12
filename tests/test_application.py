@@ -174,13 +174,15 @@ def test_set_translated_strings(set_translated_string):
 def test_get_po_file(get_translated_strings):
     get_translated_strings.return_value = [
         structures.TranslatedStringData(
-            '34',
-            'Yellow',
-            'Żółć',
-            'Programmer comment',
-            'My comment',
-            'Disambiguation for context',
-            '1',
+            pk='34',
+            base_string='Yellow',
+            plural='',
+            translation='Żółć',
+            comment='Programmer comment',
+            translator_comment='My comment',
+            context='Disambiguation for context',
+            resource_pk='1',
+            plural_translations=None,
         )
     ]
     result = application.get_po_file('pl', '1')

@@ -25,14 +25,17 @@ class TranslatedString(engine.Base):
     )
 
     def as_data(self):
+        base_data = self.base_string.as_data()
         return structures.TranslatedStringData(
-            self.base_string.id,
-            self.base_string.base_string,
-            self.translation,
-            self.base_string.comment,
-            self.translator_comment,
-            self.base_string.context,
-            self.base_string.resource_pk,
+            pk=base_data.pk,
+            base_string=base_data.base_string,
+            plural=base_data.plural,
+            translation=self.translation,
+            comment=base_data.comment,
+            translator_comment=self.translator_comment,
+            context=base_data.context,
+            resource_pk=base_data.resource_pk,
+            plural_translations=base_data.plural_translations,
         )
 
 
