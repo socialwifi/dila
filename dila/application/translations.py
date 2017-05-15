@@ -8,6 +8,7 @@ def get_po_file(language_code, resource_pk):
     po = polib.POFile()
     for string in data.get_translated_strings(language_code, resource_pk):
         po.append(build_po_entry(string))
+    po.metadata = data.get_po_metadata(language_code, resource_pk)
     return str(po)
 
 
@@ -35,6 +36,7 @@ def build_po_entry(string):
             tcomment=string.translator_comment,
         )
 
+
 def upload_po_file(resource_pk, content, translated_language_code=None):
     po = polib.pofile(content)
     used_pks = []
@@ -43,6 +45,8 @@ def upload_po_file(resource_pk, content, translated_language_code=None):
             string_pk = po_entry_savers.UniversalEntrySaver(entry).save(resource_pk, translated_language_code)
             used_pks.append(string_pk)
     data.delete_old_strings(resource_pk, keep_pks=used_pks)
+    if translated_language_code:
+        data.update_po_metadata(translated_language_code, resource_pk, po.metadata)
 
 
 def get_translated_strings(language_code, resource_pk):

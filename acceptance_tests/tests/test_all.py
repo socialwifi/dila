@@ -10,8 +10,14 @@ import time
 PO_RESULT = '''#
 msgid ""
 msgstr ""
+"Language: nl\\n"
+"MIME-Version: 1.0\\n"
+"Content-Type: text/plain; charset=UTF-8\\n"
+"Content-Transfer-Encoding: 8bit\\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\\n"
 
 #. Programmer comment
+# My comment
 msgctxt "Disambiguation for context"
 msgid "One"
 msgstr "New translation"

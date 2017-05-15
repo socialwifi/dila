@@ -8,6 +8,10 @@ from dila.application import structures
 from dila import application
 
 test_po = '''
+msgid ""
+msgstr ""
+"x: y\\n"
+
 # My comment
 #. Programmer comment
 #: location.c:23
@@ -31,7 +35,7 @@ msgstr[3] "%d opcji"
 
 test_result_po = '''#
 msgid ""
-msgstr ""
+msgstr "x: y\\n"
 
 #. Programmer comment
 # My comment
@@ -130,7 +134,8 @@ def test_get_translated_string(get_resource):
 @mock.patch('dila.data.delete_old_strings', mock.MagicMock())
 @mock.patch('dila.data.add_or_update_base_string')
 @mock.patch('dila.data.set_translated_string')
-def test_upload_po_file_with_translations(set_translated_string, add_or_update_base_string):
+@mock.patch('dila.data.update_po_metadata')
+def test_upload_po_file_with_translations(update_po_metadata, set_translated_string, add_or_update_base_string):
     add_or_update_base_string.return_value = 'string_pk'
     application.upload_po_file('1', test_po, translated_language_code='pl')
     assert add_or_update_base_string.mock_calls == [
@@ -145,11 +150,15 @@ def test_upload_po_file_with_translations(set_translated_string, add_or_update_b
             'pl',
             'string_pk',
             translation='Żółć',
-            translator_comment='',
+            translator_comment='My comment',
         )]
+    assert update_po_metadata.mock_calls == [
+        mock.call('pl', '1', {'x': 'y'}),
+    ]
 
 
 @mock.patch('dila.data.delete_old_strings', mock.MagicMock())
+@mock.patch('dila.data.update_po_metadata', mock.MagicMock())
 @mock.patch('dila.data.add_or_update_base_string')
 @mock.patch('dila.data.set_translated_string')
 def test_upload_po_file_with_plural_translations(set_translated_string, add_or_update_base_string):
@@ -225,7 +234,8 @@ def test_set_translated_strings(set_translated_string):
 
 
 @mock.patch('dila.data.get_translated_strings')
-def test_get_po_file(get_translated_strings):
+@mock.patch('dila.data.get_po_metadata')
+def test_get_po_file(get_po_metadata, get_translated_strings):
     get_translated_strings.return_value = [
         structures.TranslatedStringData(
             pk='34',
@@ -239,12 +249,14 @@ def test_get_po_file(get_translated_strings):
             plural_translations=None,
         )
     ]
+    get_po_metadata.return_value = {'x': 'y'}
     result = application.get_po_file('pl', '1')
     assert result == test_result_po
 
 
 @mock.patch('dila.data.get_translated_strings')
-def test_get_po_file_with_plural_translations(get_translated_strings):
+@mock.patch('dila.data.get_po_metadata')
+def test_get_po_file_with_plural_translations(get_po_metadata, get_translated_strings):
     get_translated_strings.return_value = [
         structures.TranslatedStringData(
             pk='34',
@@ -262,5 +274,6 @@ def test_get_po_file_with_plural_translations(get_translated_strings):
             ),
         )
     ]
+    get_po_metadata.return_value = {}
     result = application.get_po_file('pl', '1')
     assert result == test_result_plural_po

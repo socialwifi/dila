@@ -4,7 +4,7 @@ Changelog for dila
 0.3.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Preserve PO metadata.
 
 
 0.3.0 (2017-05-12)

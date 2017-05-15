@@ -330,3 +330,11 @@ def test_deleting_old_translated_strings(db_connection):
             resource_pk=resource_pk,
             plural_translations=None,
         )]
+
+
+def test_data_preserves_po_metadata(db_connection):
+    data.add_language('polish', 'pl')
+    resource_pk = data.add_resource('r').pk
+    data.update_po_metadata('pl', resource_pk, {'meta1': 'x'})
+    data.shutdown_session()
+    assert data.get_po_metadata('pl', resource_pk) == {'meta1': 'x'}
