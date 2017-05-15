@@ -6,8 +6,10 @@ import werkzeug.exceptions
 from dila import application
 from dila.frontend.flask import forms
 from dila.frontend.flask import languages
+from dila.frontend.flask import template_tools
 
 blueprint = flask.Blueprint('main', __name__)
+template_tools.setup_language_context(blueprint)
 
 
 class HomeView(views.MethodView):
