@@ -3,6 +3,7 @@ import flask
 from dila import application
 from dila import config
 from dila.frontend import initialize
+from dila.frontend.flask import authenticate_views
 from dila.frontend.flask import template_tools
 from dila.frontend.flask import views
 
@@ -31,6 +32,7 @@ def create_app():
         DEBUG=config.DEBUG,
     )
     app.register_blueprint(views.blueprint)
+    app.register_blueprint(authenticate_views.blueprint)
 
     template_tools.setup_app(app)
 

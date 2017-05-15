@@ -7,9 +7,11 @@ from dila import application
 from dila.frontend.flask import forms
 from dila.frontend.flask import languages
 from dila.frontend.flask import template_tools
+from dila.frontend.flask import user_tools
 
 blueprint = flask.Blueprint('main', __name__)
 template_tools.setup_language_context(blueprint)
+blueprint.before_request(user_tools.check_login)
 
 
 class HomeView(views.MethodView):
