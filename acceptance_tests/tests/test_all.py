@@ -31,7 +31,8 @@ msgstr ""
 
 def test_first(selenium: selenium.webdriver.Remote, running_server_url):
     open_homepage(running_server_url, selenium)
-    assert_no_resources_info(selenium)
+    login(selenium, 'admin', 'admin')
+    retry_selenium(assert_no_resources_info)(selenium)
     add_resource(selenium, 'first resource')
     retry_selenium(add_resource)(selenium, 'second resource')
     retry_selenium(select_resource)(selenium, 'first resource')
@@ -76,6 +77,16 @@ retry_selenium = tenacity.retry(
 def open_homepage(running_server_url, selenium):
     selenium.get(running_server_url)
     assert selenium.title == 'Dila'
+
+
+def login(selenium, username, password):
+    username_field = selenium.find_element_by_id('username')
+    username_field.clear()
+    username_field.send_keys(username)
+    password_field = selenium.find_element_by_id('password')
+    password_field.clear()
+    password_field.send_keys(password)
+    selenium.find_element_by_id('login').click()
 
 
 def assert_no_resources_info(selenium):

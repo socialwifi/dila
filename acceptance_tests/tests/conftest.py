@@ -40,10 +40,31 @@ def postgres_server(unmigrated_postgres_server, docker_image):
               '-e', 'POSTGRES_USER=dila', '-e', 'POSTGRES_PASSWORD=dila', 'postgres',
               'psql', '-h', 'localhost', '-U', 'dila', '-c', 'DROP SCHEMA public CASCADE; CREATE SCHEMA public;')
 
+
+@pytest.fixture(scope="session")
+def ldap_server():
+    container_name = 'acceptance_test_dila_ldap'
+    script_path = str(pathlib.Path(__file__).parent.parent / 'test.ldif')
+    sh.docker('run', '-d', '-e', 'LDAP_ORGANISATION="Dila"', '-e', 'LDAP_DOMAIN=example.com',
+              '-e', 'LDAP_ADMIN_PASSWORD=admin_password',
+              '-v', '{}:/scripts/test.ldif:ro'.format(script_path),
+              '--name', container_name, 'osixia/openldap')
+    log = sh.docker('logs', '-f', container_name, _iter='err', _ok_code=2)
+    for line in log:
+        if 'slapd starting' in line:
+            break
+    log.terminate()
+    sh.docker('exec', container_name,
+              'ldapadd', '-x', '-D', 'cn=admin,dc=example,dc=com', '-w', 'admin_password', '-f', '/scripts/test.ldif')
+    yield container_name
+    sh.docker('rm', '-fv', container_name)
+
+
 @pytest.fixture
-def running_server(postgres_server, docker_image):
+def running_server(postgres_server, ldap_server, docker_image):
     container_name = 'test_dila'
-    sh.docker('run', '-d', '--name', container_name, '--link', '{}:db'.format(postgres_server), docker_image)
+    sh.docker('run', '-d', '--name', container_name, '--link', '{}:db'.format(postgres_server),
+              '--link', '{}:ldap'.format(ldap_server), docker_image)
     log = sh.docker('logs', '-f', container_name, _iter='err', _ok_code=2)
     for line in log:
         if 'Running on http://0.0.0.0:80/' in line:
