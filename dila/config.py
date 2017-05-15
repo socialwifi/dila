@@ -6,6 +6,11 @@ ENV = 'production'
 DEBUG = False
 DATABASE_URL = ''
 STATIC_URL = ''
+LDAP_SERVER_URI = ''
+LDAP_BIND_DN = ''
+LDAP_BIND_PASSWORD = ''
+LDAP_USER_OBJECT_FILTER = ''
+LDAP_BASE_DN = ''
 
 
 def setup_from_module(module_name):

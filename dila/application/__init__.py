@@ -11,7 +11,8 @@ from .translations import get_translated_string
 from .translations import get_translated_strings
 from .translations import set_translated_string
 from .translations import upload_po_file
+from .authentication import authenticate
 
 __all__ = [setup, shutdown_session, upload_po_file, get_translated_string, get_translated_strings,
            set_translated_string, get_po_file, add_resource, get_resource, get_resources, add_language, get_language,
-           get_languages]
+           get_languages, authenticate]

@@ -1,3 +1,5 @@
+import pathlib
+
 import pytest
 import sh
 import time
@@ -69,6 +71,35 @@ def postgres_server():
             break
     time.sleep(1)
     log.terminate()
+    yield container_name
+    sh.docker('rm', '-fv', container_name)
+
+
+@pytest.fixture(scope="session")
+def config_ldap_setup(ldap_server):
+    config.setup(
+        LDAP_SERVER_URI='ldap://{}'.format(get_container_ip(ldap_server)),
+        LDAP_BIND_DN='cn=admin,dc=example,dc=com',
+        LDAP_BIND_PASSWORD='admin_password',
+        LDAP_BASE_DN='ou=employees,dc=example,dc=com',
+        LDAP_USER_OBJECT_FILTER="(|(uid=%(user)s)(mail=%(user)s))",
+    )
+
+@pytest.fixture(scope="session")
+def ldap_server():
+    container_name = 'test_dila_ldap'
+    script_path = str(pathlib.Path(__file__).parent / 'test.ldif')
+    sh.docker('run', '-d', '-e', 'LDAP_ORGANISATION="Dila"', '-e', 'LDAP_DOMAIN=example.com',
+              '-e', 'LDAP_ADMIN_PASSWORD=admin_password',
+              '-v', '{}:/scripts/test.ldif:ro'.format(script_path),
+              '--name', container_name, 'osixia/openldap')
+    log = sh.docker('logs', '-f', container_name, _iter='err', _ok_code=2)
+    for line in log:
+        if 'slapd starting' in line:
+            break
+    log.terminate()
+    sh.docker('exec', container_name,
+              'ldapadd', '-x', '-D', 'cn=admin,dc=example,dc=com', '-w', 'admin_password', '-f', '/scripts/test.ldif')
     yield container_name
     sh.docker('rm', '-fv', container_name)
 

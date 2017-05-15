@@ -277,3 +277,15 @@ def test_get_po_file_with_plural_translations(get_po_metadata, get_translated_st
     get_po_metadata.return_value = {}
     result = application.get_po_file('pl', '1')
     assert result == test_result_plural_po
+
+
+def test_authenticating_valid_user(config_ldap_setup):
+    assert application.authenticate('shco01', 'bazinga')
+
+
+def test_authenticating_user_without_password(config_ldap_setup):
+    assert not application.authenticate('shco01', '')
+
+
+def test_authenticating_invalid_user(config_ldap_setup):
+    assert not application.authenticate('hacker', 'X" OR "a" = "A')
