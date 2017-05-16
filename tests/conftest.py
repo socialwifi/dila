@@ -9,6 +9,9 @@ from dila import data
 from dila.data import engine
 
 
+RESOURCES_PATH = pathlib.Path(__file__).parent.parent / 'test_resources'
+
+
 @pytest.fixture(scope="session")
 def config_setup():
     config.setup(
@@ -88,7 +91,7 @@ def config_ldap_setup(ldap_server):
 @pytest.fixture(scope="session")
 def ldap_server():
     container_name = 'test_dila_ldap'
-    script_path = str(pathlib.Path(__file__).parent / 'test.ldif')
+    script_path = str(RESOURCES_PATH / 'test.ldif')
     sh.docker('run', '-d', '-e', 'LDAP_ORGANISATION="Dila"', '-e', 'LDAP_DOMAIN=example.com',
               '-e', 'LDAP_ADMIN_PASSWORD=admin_password',
               '-v', '{}:/scripts/test.ldif:ro'.format(script_path),

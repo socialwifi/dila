@@ -15,7 +15,7 @@ db:
 ldap:
   image: osixia/openldap:1.1.8
   volumes:
-    - ../acceptance_tests/test.ldif:/scripts/test.ldif:ro
+    - ../test_resources/test.ldif:/scripts/test.ldif:ro
   environment:
     - LDAP_ORGANISATION="Dila"
     - LDAP_DOMAIN=example.com

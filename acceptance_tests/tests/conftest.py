@@ -8,10 +8,12 @@ from selenium import webdriver
 from selenium.common import exceptions as selenium_exceptions
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
+RESOURCES_PATH = pathlib.Path(__file__).parent.parent.parent / 'test_resources'
+
 
 @pytest.fixture(scope="session")
 def docker_image():
-    build_script = pathlib.Path(__file__).parent.parent.parent / 'test_image' / 'build.sh'
+    build_script = RESOURCES_PATH / 'test_image' / 'build.sh'
     build = sh.Command(str(build_script))
     image_name = 'test_dila_image'
     build(image_name)
@@ -44,7 +46,7 @@ def postgres_server(unmigrated_postgres_server, docker_image):
 @pytest.fixture(scope="session")
 def ldap_server():
     container_name = 'acceptance_test_dila_ldap'
-    script_path = str(pathlib.Path(__file__).parent.parent / 'test.ldif')
+    script_path = str(RESOURCES_PATH / 'test.ldif')
     sh.docker('run', '-d', '-e', 'LDAP_ORGANISATION="Dila"', '-e', 'LDAP_DOMAIN=example.com',
               '-e', 'LDAP_ADMIN_PASSWORD=admin_password',
               '-v', '{}:/scripts/test.ldif:ro'.format(script_path),

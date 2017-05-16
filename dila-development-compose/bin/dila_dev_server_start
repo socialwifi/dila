@@ -1,6 +1,7 @@
 #!/bin/bash -e
 cd "$(dirname $0)/.."
-../test_image/build.sh dila_dev_image
+../test_resources/test_image/build.sh dila_dev_image
 docker-compose build
 docker-compose up -d $UP_FLAGS
 docker-compose run dila alembic -c dila/alembic.ini upgrade head
+docker-compose exec ldap ldapadd -x -D cn=admin,dc=example,dc=com -w admin_password -f /scripts/test.ldif
