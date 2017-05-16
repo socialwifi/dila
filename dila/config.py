@@ -18,6 +18,8 @@ LDAP_USER_ATTRIBUTE_MAP = {
     "first_name": "givenName",
     "last_name": "sn",
 }
+LDAP_START_TLS = False
+LDAP_GLOBAL_OPTIONS = {}
 
 def setup_from_module(module_name):
     module = __import__(module_name)

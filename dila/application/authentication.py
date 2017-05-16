@@ -40,5 +40,9 @@ def get_user_records(username):
 def initialize_connection():
     connection = ldap.initialize(config.LDAP_SERVER_URI)
     connection.protocol_version = ldap.VERSION3
+    if config.LDAP_START_TLS:
+        connection.start_tls_s()
+    for key, value in config.LDAP_GLOBAL_OPTIONS:
+        connection.set_option(key, value)
     yield connection
     connection.unbind_s()

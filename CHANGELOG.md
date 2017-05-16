@@ -4,7 +4,7 @@ Changelog for dila
 0.4.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Add ldap tls option.
 
 
 0.4.0 (2017-05-16)
