@@ -9,6 +9,10 @@ def check_login():
         return flask.redirect(flask.url_for('authenticate.login'))
 
 
+def logout():
+    set_current_user(application.ANONYMOUS_USER)
+
+
 def set_current_user(user, session=None):
     session = flask.session if session is None else session
     session['user'] = user._asdict()

@@ -32,3 +32,11 @@ class LoginView(views.MethodView):
 
 
 blueprint.add_url_rule('/login/', view_func=LoginView.as_view('login'))
+
+
+class LogoutView(views.MethodView):
+    def post(self):
+        user_tools.logout()
+        return flask.redirect(flask.url_for('authenticate.login'))
+
+blueprint.add_url_rule('/logout/', view_func=LogoutView.as_view('logout'))

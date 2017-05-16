@@ -11,6 +11,7 @@ from dila.frontend.flask import user_tools
 
 blueprint = flask.Blueprint('main', __name__)
 template_tools.setup_language_context(blueprint)
+template_tools.setup_user_context(blueprint)
 blueprint.before_request(user_tools.check_login)
 
 

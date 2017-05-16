@@ -2,6 +2,7 @@ import re
 from unittest import mock
 
 from dila.application import structures
+from dila.frontend.flask import user_tools
 
 
 def test_login_form(flask_client):
@@ -38,3 +39,17 @@ def test_post_invalid_login(authenticate, flask_client):
     response = flask_client.post('/login/', data={'username': 'songo', 'password': 'ssj5'})
     authenticate.assert_called_once_with('songo', 'ssj5')
     assert "Invalid login or password" in response.data.decode()
+
+
+def test_post_logout(flask_client):
+    with flask_client.session_transaction() as session:
+        user_tools.set_current_user(structures.User(
+            authenticated=True,
+            username='username',
+            first_name='Sheldon',
+            last_name='Cooper',
+        ), session=session)
+    response = flask_client.post('/logout/')
+    assert response.status_code == 302
+    assert response.location == 'http://localhost/login/'
+    assert not user_tools.current_user().authenticated

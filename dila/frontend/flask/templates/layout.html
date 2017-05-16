@@ -50,6 +50,16 @@
                     </div>
                 </div>
             </li>
+            <li id="userMenu" class="dropdown">
+                <a id="userMenuButton" class="dropdown-toggle" data-toggle="dropdown" href="#">
+                    {{ current_user.first_name }} {{ current_user.last_name }}
+                </a>
+                <div class="dropdown-menu">
+                  <form method="post" action="{{ url_for('authenticate.logout') }}">
+                    <input type="submit" id="logout" class="btn btn-info btn-lg center-block" value="Logout">
+                  </form>
+                </div>
+            </li>
           </ul>
         </div>
       </div>

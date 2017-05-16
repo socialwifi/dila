@@ -46,8 +46,12 @@ def test_home(get_resources, authenticated_flask_client):
     assert '<title>Dila</title>' in response.data.decode()
     assert 'There are no resources.' in response.data.decode()
     assert 'There are no languages.' in response.data.decode()
+    assert 'Sheldon Cooper' in response.data.decode()
     assert re.search('<li class="active">\s*<a class="navbar-brand" href="/">\s*Select resource\s*</a>\s*</li>',
                      response.data.decode())
+    assert re.search('<form method="post" action="/logout/">\s+'
+                     '<input type="submit" id="logout" class="[^"]+" value="Logout">\s+'
+                     '</form>', response.data.decode())
 
 
 @mock.patch('dila.application.get_resources')

@@ -242,8 +242,8 @@ def assert_strings_without_translations_displayed(selenium):
 def logout(selenium):
     @retry_selenium
     def open_add_language_menu():
-        selenium.find_element_by_id('userMenu').click()
-        selenium.find_element_by_id('Logout').click()
+        selenium.find_element_by_id('userMenuButton').click()
+        selenium.find_element_by_id('logout').click()
     open_add_language_menu()
 
     @retry_selenium
