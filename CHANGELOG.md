@@ -1,7 +1,7 @@
 Changelog for dila
 =================
 
-0.4.0 (unreleased)
+0.4.0 (2017-05-16)
 ------------------
 
 - Add login page using ldap backend.
