@@ -208,7 +208,11 @@ def assert_changed_translation_strings(selenium):
 def assert_download_link_works(selenium):
     download_link = selenium.find_element_by_link_text('Download po')
     po_url = download_link.get_attribute('href')
-    with urllib.request.urlopen(po_url) as new_po_file:
+    opener = urllib.request.URLopener()
+    cookie_header = 'session={}'.format(selenium.get_cookie('session')['value'])
+    print(cookie_header)
+    opener.addheader('Cookie', cookie_header)
+    with opener.open(po_url) as new_po_file:
         new_po = new_po_file.read()
         assert new_po.decode('utf-8') == PO_RESULT
         assert new_po_file.info()['Content-Disposition'] == "attachment; filename=translations.po"
