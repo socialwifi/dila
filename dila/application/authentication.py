@@ -42,7 +42,7 @@ def initialize_connection():
     connection.protocol_version = ldap.VERSION3
     if config.LDAP_START_TLS:
         connection.start_tls_s()
-    for key, value in config.LDAP_GLOBAL_OPTIONS:
+    for key, value in config.LDAP_GLOBAL_OPTIONS.items():
         connection.set_option(key, value)
     yield connection
     connection.unbind_s()
