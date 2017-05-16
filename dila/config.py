@@ -10,8 +10,9 @@ LDAP_SERVER_URI = ''
 LDAP_BIND_DN = ''
 LDAP_BIND_PASSWORD = ''
 LDAP_USER_OBJECT_FILTER = ''
-LDAP_BASE_DN = ''
-
+LDAP_USER_BASE_DN = ''
+LDAP_GROUP_OBJECT_FILTER = ''
+LDAP_GROUP_BASE_DN = ''
 
 def setup_from_module(module_name):
     module = __import__(module_name)

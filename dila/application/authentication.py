@@ -25,7 +25,7 @@ def get_user_records(username):
     with initialize_connection() as connection:
         connection.simple_bind_s(config.LDAP_BIND_DN, config.LDAP_BIND_PASSWORD)
         query = config.LDAP_USER_OBJECT_FILTER % {'user': ldap_filter.escape_filter_chars(username)}
-        records = connection.search_s(config.LDAP_BASE_DN, ldap.SCOPE_SUBTREE, query)
+        records = connection.search_s(config.LDAP_USER_BASE_DN, ldap.SCOPE_SUBTREE, query)
     return records
 
 
