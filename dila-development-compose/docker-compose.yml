@@ -13,7 +13,7 @@ db:
     POSTGRES_USER: dila
     POSTGRES_PASSWORD: dila
 ldap:
-  image: osixia/openldap:1.1.3
+  image: osixia/openldap:1.1.8
   volumes:
     - ../acceptance_tests/test.ldif:/scripts/test.ldif:ro
   environment:

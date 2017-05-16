@@ -1,15 +1,34 @@
 import flask
+from cached_property import cached_property
 from flask import views
 
-from dila.frontend.flask import template_tools
+from dila.frontend.flask import forms
 
 blueprint = flask.Blueprint('authenticate', __name__)
-template_tools.setup_language_context(blueprint)
 
 
 class LoginView(views.MethodView):
     def get(self):
         return flask.render_template('login.html', **self.context)
+
+    def post(self):
+        if self.form.validate():
+            username = self.form.username.data
+            flask.session['username'] = username
+            return flask.redirect(flask.url_for('main.home'))
+        else:
+            return self.get()
+
+
+    @property
+    def context(self):
+        return {
+            'form': self.form,
+        }
+
+    @cached_property
+    def form(self):
+        return forms.LoginForm()
 
 
 blueprint.add_url_rule('/login/', view_func=LoginView.as_view('login'))

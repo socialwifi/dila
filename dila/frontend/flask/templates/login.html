@@ -12,9 +12,31 @@
     <![endif]-->
   </head>
   <body style="padding-top: 50px">
-
     <div class="container">
-      Log in.
+      <form method="POST" action="{{ url_for('authenticate.login') }}" enctype=multipart/form-data>
+        {{ form.csrf_token }}
+        <div class="form-group">
+          {{ form.username.label }} {{ form.username(class_="form-control") }}
+          {% if form.username.errors %}
+            <ul class="help-block">
+            {% for error in form.username.errors %}
+              <li>{{ error }}</li>
+            {% endfor %}
+            </ul>
+          {% endif %}
+        </div>
+        <div class="form-group">
+          {{ form.password.label }} {{ form.password(class_="form-control") }}
+          {% if form.password.errors %}
+            <ul class="help-block">
+            {% for error in form.password.errors %}
+              <li>{{ error }}</li>
+            {% endfor %}
+            </ul>
+          {% endif %}
+        </div>
+        <input class="btn btn-primary" id="login" value="Log in" type="submit">
+      </form>
     </div>
     <script src="{{ static_url('vendor/js/jquery.min.js') }}"></script>
     <script src="{{ static_url('vendor/js/bootstrap.min.js') }}"></script>

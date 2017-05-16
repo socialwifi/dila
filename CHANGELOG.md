@@ -1,9 +1,10 @@
 Changelog for dila
 =================
 
-0.3.1 (unreleased)
+0.4.0 (unreleased)
 ------------------
 
+- Add login page using ldap backend.
 - Preserve PO metadata.
 
 

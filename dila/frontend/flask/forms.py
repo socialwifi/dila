@@ -72,3 +72,16 @@ class NewLanguageForm(flask_wtf.FlaskForm):
     new_language_name = wtforms.StringField('New language')
     new_language_short = wtforms.StringField('Language code')
     next = wtforms.HiddenField()
+
+
+class LoginForm(flask_wtf.FlaskForm):
+    username = wtforms.StringField('Username')
+    password = wtforms.PasswordField('Password')
+
+    def validate(self, *args, **kwargs):
+        if super().validate(*args, **kwargs):
+            if application.authenticate(self.username.data, self.password.data):
+                return True
+            else:
+                self.password.errors.append('Invalid login or password')
+        return False

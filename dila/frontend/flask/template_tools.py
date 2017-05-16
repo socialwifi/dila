@@ -13,6 +13,7 @@ def setup_app(app):
             return urllib.parse.urljoin(config.STATIC_URL, filename)
         return flask.url_for('static', filename=filename)
 
+
 def setup_language_context(blueprint):
     @blueprint.context_processor
     def inject_languages_menu():
