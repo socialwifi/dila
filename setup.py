@@ -5,7 +5,7 @@ from setuptools import setup
 
 setup(
     name='dila',
-    version='0.4.2.dev0',
+    version='0.4.2',
     description='Dila is a open source web-based translation platform for translators, content creators and developers.',
     author='Jakub Skiepko',
     author_email='it@socialwifi.com',

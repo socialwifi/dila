@@ -1,7 +1,7 @@
 Changelog for dila
 =================
 
-0.4.2 (unreleased)
+0.4.2 (2017-05-16)
 ------------------
 
 - Fix LDAP\_GLOBAL\_OPTIONS.
