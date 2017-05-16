@@ -21,3 +21,9 @@ Language = collections.namedtuple(
     'Language',
     ['name', 'code']
 )
+
+
+User = collections.namedtuple(
+    'User',
+    ['authenticated', 'username', 'first_name', 'last_name']
+)

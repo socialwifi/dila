@@ -13,6 +13,11 @@ LDAP_USER_OBJECT_FILTER = ''
 LDAP_USER_BASE_DN = ''
 LDAP_GROUP_OBJECT_FILTER = ''
 LDAP_GROUP_BASE_DN = ''
+LDAP_ENCODING = 'utf-8'
+LDAP_USER_ATTRIBUTE_MAP = {
+    "first_name": "givenName",
+    "last_name": "sn",
+}
 
 def setup_from_module(module_name):
     module = __import__(module_name)

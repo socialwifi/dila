@@ -280,12 +280,13 @@ def test_get_po_file_with_plural_translations(get_po_metadata, get_translated_st
 
 
 def test_authenticating_valid_user(config_ldap_setup):
-    assert application.authenticate('shco01', 'bazinga')
+    assert application.authenticate('shco01', 'bazinga') == structures.User(
+        authenticated=True, username='shco01', first_name='Sheldon', last_name='Cooper')
 
 
 def test_authenticating_user_without_password(config_ldap_setup):
-    assert not application.authenticate('shco01', '')
+    assert not application.authenticate('shco01', '').authenticated
 
 
 def test_authenticating_invalid_user(config_ldap_setup):
-    assert not application.authenticate('hacker', 'X" OR "a" = "A')
+    assert not application.authenticate('hacker', 'X" OR "a" = "A').authenticated

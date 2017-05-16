@@ -32,7 +32,8 @@ msgstr ""
 def test_first(selenium: selenium.webdriver.Remote, running_server_url):
     open_homepage(running_server_url, selenium)
     login(selenium, 'admin', 'admin')
-    retry_selenium(assert_no_resources_info)(selenium)
+    retry_selenium(assert_logged_in)(selenium, 'Super Admin')
+    assert_no_resources_info(selenium)
     add_resource(selenium, 'first resource')
     retry_selenium(add_resource)(selenium, 'second resource')
     retry_selenium(select_resource)(selenium, 'first resource')
@@ -58,6 +59,7 @@ def test_first(selenium: selenium.webdriver.Remote, running_server_url):
     retry_selenium(select_resource)(selenium, 'first resource')
     retry_selenium(select_language)(selenium, 'polish')
     retry_selenium(assert_strings_without_translations_displayed)(selenium)
+    logout(selenium)
 
 
 retry_selenium = tenacity.retry(
@@ -87,6 +89,11 @@ def login(selenium, username, password):
     password_field.clear()
     password_field.send_keys(password)
     selenium.find_element_by_id('login').click()
+
+
+def assert_logged_in(selenium, display_name):
+    content = selenium.find_element_by_id('userMenu').text
+    assert display_name in content
 
 
 def assert_no_resources_info(selenium):
@@ -230,3 +237,16 @@ def assert_strings_without_translations_displayed(selenium):
     assert 'Disambiguation for context' in content
     assert 'One' in content
     assert 'Een' not in content
+
+
+def logout(selenium):
+    @retry_selenium
+    def open_add_language_menu():
+        selenium.find_element_by_id('userMenu').click()
+        selenium.find_element_by_id('Logout').click()
+    open_add_language_menu()
+
+    @retry_selenium
+    def assert_login_page():
+        assert selenium.find_element_by_id('login')
+    assert_login_page()

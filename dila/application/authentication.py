@@ -4,6 +4,9 @@ import ldap
 from ldap import filter as ldap_filter
 
 from dila import config
+from dila.application import structures
+
+ANONYMOUS_USER = structures.User(authenticated=False, username='', first_name='ANONYMOUS', last_name='')
 
 
 def authenticate(username, password):
@@ -14,11 +17,15 @@ def authenticate(username, password):
             try:
                 connection.simple_bind_s(user_dn, password)
             except ldap.LDAPError:
-                return False
+                return ANONYMOUS_USER
             else:
-                return True
+                encoding = config.LDAP_ENCODING
+                first_name = user_attributes.get(config.LDAP_USER_ATTRIBUTE_MAP['first_name'])[0].decode(encoding)
+                last_name = user_attributes.get(config.LDAP_USER_ATTRIBUTE_MAP['last_name'])[0].decode(encoding)
+                return structures.User(
+                    authenticated=True, username=username, first_name=first_name, last_name=last_name)
     else:
-        return False
+        return ANONYMOUS_USER
 
 
 def get_user_records(username):

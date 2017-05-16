@@ -6,6 +6,7 @@ import flask
 import pytest
 
 from dila.application import structures
+from dila.frontend.flask import user_tools
 
 test_po = '''
 # My comment
@@ -21,7 +22,12 @@ msgstr "Żółć"
 @pytest.fixture
 def authenticated_flask_client(flask_client):
     with flask_client.session_transaction() as session:
-        session['username'] = 'username'
+        user_tools.set_current_user(structures.User(
+            authenticated=True,
+            username='username',
+            first_name='Sheldon',
+            last_name='Cooper',
+        ), session=session)
     return flask_client
 
 

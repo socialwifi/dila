@@ -2,6 +2,7 @@ import flask
 from cached_property import cached_property
 from flask import views
 
+from dila.frontend.flask import user_tools
 from dila.frontend.flask import forms
 
 blueprint = flask.Blueprint('authenticate', __name__)
@@ -13,8 +14,7 @@ class LoginView(views.MethodView):
 
     def post(self):
         if self.form.validate():
-            username = self.form.username.data
-            flask.session['username'] = username
+            user_tools.set_current_user(self.form.user)
             return flask.redirect(flask.url_for('main.home'))
         else:
             return self.get()

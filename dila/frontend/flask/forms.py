@@ -77,10 +77,12 @@ class NewLanguageForm(flask_wtf.FlaskForm):
 class LoginForm(flask_wtf.FlaskForm):
     username = wtforms.StringField('Username')
     password = wtforms.PasswordField('Password')
+    user = application.ANONYMOUS_USER
 
     def validate(self, *args, **kwargs):
         if super().validate(*args, **kwargs):
-            if application.authenticate(self.username.data, self.password.data):
+            self.user = application.authenticate(self.username.data, self.password.data)
+            if self.user.authenticated:
                 return True
             else:
                 self.password.errors.append('Invalid login or password')
