@@ -86,8 +86,10 @@ def config_ldap_setup(ldap_server):
         LDAP_BIND_PASSWORD='admin_password',
         LDAP_USER_BASE_DN='ou=employees,dc=example,dc=com',
         LDAP_USER_OBJECT_FILTER="(|(uid=%(user)s)(mail=%(user)s))",
-        LDAP_GROUP_BASE_DN='ou=groups,dc=example,dc=com',
-        LDAP_GROUP_OBJECT_FILTER='(objectClass=posixGroup)',
+        LDAP_GROUP_BASE_DN='ou=dila,ou=groups,dc=example,dc=com',
+        LDAP_GROUP_OBJECT_FILTER='(&(ObjectClass=posixGroup)(cn=%(group)s))',
+        LDAP_GROUP_ALL='(&(ObjectClass=posixGroup))',
+        LDAP_SUPERUSER_GROUP_CN ='superuser'
     )
 
 @pytest.fixture(scope="session")

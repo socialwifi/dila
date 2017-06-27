@@ -281,7 +281,7 @@ def test_get_po_file_with_plural_translations(get_po_metadata, get_translated_st
 
 def test_authenticating_valid_user(config_ldap_setup):
     assert application.authenticate('shco01', 'bazinga') == structures.User(
-        authenticated=True, username='shco01', first_name='Sheldon', last_name='Cooper')
+        authenticated=True, username='shco01', first_name='Sheldon', last_name='Cooper', is_superuser=False)
 
 
 def test_authenticating_user_without_password(config_ldap_setup):
@@ -290,3 +290,17 @@ def test_authenticating_user_without_password(config_ldap_setup):
 
 def test_authenticating_invalid_user(config_ldap_setup):
     assert not application.authenticate('hacker', 'X" OR "a" = "A').authenticated
+
+
+def test_authenticating_user_not_dila_permited(config_ldap_setup):
+    assert not application.authenticate('howo01', 'bazinga').authenticated
+
+
+def test_authenticating_user_not_superuser(config_ldap_setup):
+    assert application.authenticate('shco01', 'bazinga') == structures.User(
+        authenticated=True, username='shco01', first_name='Sheldon', last_name='Cooper', is_superuser=False)
+
+
+def test_authenticating_user_superuser(config_ldap_setup):
+    assert application.authenticate('admin', 'admin') == structures.User(
+        authenticated=True, username='admin', first_name='Super', last_name='Admin', is_superuser=True)

@@ -23,7 +23,13 @@ Language = collections.namedtuple(
 )
 
 
-User = collections.namedtuple(
+UserT = collections.namedtuple(
     'User',
-    ['authenticated', 'username', 'first_name', 'last_name']
+    ['authenticated', 'username', 'first_name', 'last_name', 'is_superuser']
 )
+
+class User(UserT):
+    __slots__ = ()
+
+    def __new__(cls, authenticated, username, first_name, last_name, is_superuser=False):
+        return super().__new__(cls, authenticated, username, first_name, last_name, is_superuser)

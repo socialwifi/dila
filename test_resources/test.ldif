@@ -60,19 +60,9 @@ gidNumber: 123
 cn: superuser
 memberUid: admin
 
-# add "translator-nl" entry
-dn: cn=translator-nl,ou=dila,ou=groups,dc=example,dc=com
+# add "translator" entry
+dn: cn=translator,ou=dila,ou=groups,dc=example,dc=com
 objectclass: posixGroup
 gidNumber: 124
 cn: staff
-memberUid: admin
 memberUid: shco01
-
-# add "translator-pl" entry
-dn: cn=translator-pl,ou=dila,ou=groups,dc=example,dc=com
-objectclass: posixGroup
-gidNumber: 125
-cn: active
-memberUid: admin
-memberUid: shco01
-memberUid: leho01

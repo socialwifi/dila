@@ -21,6 +21,7 @@ def test_post_login(authenticate, flask_client):
         username='username',
         first_name='Sheldon',
         last_name='Cooper',
+        is_superuser=False,
     )
     response = flask_client.post('/login/', data={'username': 'songo', 'password': 'ssj4'})
     authenticate.assert_called_once_with('songo', 'ssj4')
@@ -35,6 +36,7 @@ def test_post_invalid_login(authenticate, flask_client):
         username='',
         first_name='',
         last_name='',
+        is_superuser=False,
     )
     response = flask_client.post('/login/', data={'username': 'songo', 'password': 'ssj5'})
     authenticate.assert_called_once_with('songo', 'ssj5')
@@ -48,6 +50,7 @@ def test_post_logout(flask_client):
             username='username',
             first_name='Sheldon',
             last_name='Cooper',
+            is_superuser=False,
         ), session=session)
     response = flask_client.post('/logout/')
     assert response.status_code == 302
